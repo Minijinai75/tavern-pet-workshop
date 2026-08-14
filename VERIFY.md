@@ -27,17 +27,23 @@
 | `npm run build` after responsive update | Type-check and bundle v0.2 | PASS | Vite production build completed |
 | Chrome 390px responsive QA | Verify actual mobile operation mode | PASS | `layout=mobile`,「手機版」label, 37.05px title, 16px input text, 48px+ primary actions, zero overflow, no console errors |
 | Chrome 1440px responsive QA | Verify reduced title and desktop layout | PASS | `layout=desktop`,「桌面版」label, 60.48px title, zero overflow |
+| Resident Loader distillation validator (`--route hybrid`) | Enforce evidence/behavior contract before implementation | PASS | Ten sections complete; product flow, state owners, boundaries, rollback, mappings recorded |
+| `npm test` after Loader v0.1.0 | Verify workshop and Loader security, settings, context preview, profiles, history, sprite grid, and panel | PASS | 11 test files, 45 tests passed |
+| `npm run build` | Type-check and build updated website with Loader download CTA | PASS | Vite production build completed |
+| `npm run package:loader` twice | Type-check, bundle, and create a reproducible extension package | PASS | Both runs produced `resident-loader-v0.1.0.zip`, 50,502 bytes; SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5` |
+| `validate-extension.js resident-loader` | Validate SillyTavern manifest, JS/CSS and lifecycle exports | PASS | 10 passed / 0 warnings / 0 failures |
 
 ## Unverified Areas
 
 - A human click-through download in a normal headed browser after Pages deployment.
+- A real SillyTavern install smoke for Connection Profile generation, drag persistence, chat switching, and history reload.
 
 ## Known Risks
 
-- Future Resident Loader importer is not implemented in this repository yet.
 - Public repository has no redistribution license until Mini chooses one.
 - Headless Chrome in this Windows environment cancels all tested Blob downloads; automated native-file completion cannot be used as the final download oracle here.
+- Loader v0.1.0 has automated contract/build coverage but has not yet been exercised inside a real headed SillyTavern runtime.
 
 ## Recommended Next Verification
 
-- Perform one normal-browser download click if a human browser session is available; begin Loader reference distillation.
+- Verify the Pages ZIP URL after deployment, then install v0.1.0 into a real SillyTavern and exercise import → bind → generate → close/reopen panel → reload.

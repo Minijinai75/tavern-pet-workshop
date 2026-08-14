@@ -1,6 +1,10 @@
 # 桌寵工坊
 
-免帳號、純瀏覽器本機處理的 SillyTavern 桌寵角色包製作工具。
+免帳號、純瀏覽器本機處理的 SillyTavern 桌寵角色包製作工具，並附共用 Resident Loader。
+
+- 工坊：<https://minijinai75.github.io/tavern-pet-workshop/>
+- Loader 下載：<https://minijinai75.github.io/tavern-pet-workshop/downloads/resident-loader-v0.1.0.zip>
+- Loader 原始碼與說明：[`resident-loader/`](resident-loader/)
 
 ## 目前能做什麼
 
@@ -9,8 +13,7 @@
 - 編輯桌寵名稱、作者、介紹、代表色與三組 Prompt。
 - 下載資料型 `.jrpack.zip`，不輸出任意 JavaScript。
 - 圖片、角色資料與 Prompt 不會傳到伺服器。
-
-> Resident Loader 的匯入功能與安裝包仍在後續階段；目前網站先建立角色包格式與製作流程。
+- 安裝 Resident Loader 後，可匯入角色包、綁定目前角色、選酒館既有 API Profile、調整 Prompt／最近樓數／桌寵速度，並在同一個 HTML 面板保存生成歷史。
 
 ## 本機開發
 
@@ -24,6 +27,7 @@ npm run dev
 ```bash
 npm test
 npm run build
+npm run package:loader
 ```
 
 ## 發布

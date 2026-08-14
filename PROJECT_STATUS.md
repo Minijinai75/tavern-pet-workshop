@@ -3,15 +3,15 @@
 ## Snapshot
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
-- Active task: 發布手機操作版後開始共用 Resident Loader
-- Current phase: website v0.2 ready to deploy
+- Active task: 發布共用 Resident Loader v0.1.0 與網站下載入口
+- Current phase: Loader v0.1.0 locally packaged; deployment pending
 - Overall status: in progress
-- Last updated: 2026-08-14 18:20 Asia/Taipei
+- Last updated: 2026-08-14 18:58 Asia/Taipei
 
 ## Current Goal
 
-- Goal: 使用者能在不登入、不上傳資料的情況下，用圖片與表單製作安全的 `.jrpack.zip`。
-- Success criteria: 本機預覽可用、匯出包結構通過測試、網站可建置、GitHub Pages 可部署。
+- Goal: 使用者能製作安全 `.jrpack.zip`，並用只安裝一次的共用 Loader 匯入、綁定角色、調整生成與保存歷史。
+- Success criteria: 工坊與 Loader 都可建置；壞包被拒；API 不重填 Key；Prompt／樓數／速度可調；生成歷史重開仍在；網站可下載安裝包。
 - Why it matters: 讓不會寫 JSON 或 JavaScript 的使用者也能製作 SillyTavern 桌寵角色包。
 
 ## Completed So Far
@@ -23,22 +23,25 @@
 - Website UI, browser-local spritesheet preview, visible/editable prompts, one-click GPT image prompt, and `.jrpack.zip` builder implemented.
 - Exact `1024×1536`, `8×12`, `128×128` atlas validation implemented.
 - Loader v1 requirements confirmed and recorded: existing SillyTavern API/model selection, per-character prompt overrides, size/position/opacity, separate animation and movement speeds.
-- Unit suite: 12 tests passing. Production build passes.
+- Website v0.1 baseline completed with its original 12-test suite and production build.
 - Public GitHub Pages site deployed and verified at `https://minijinai75.github.io/tavern-pet-workshop/`.
 - Responsive v0.2 implemented: explicit mobile/desktop mode detection, smaller hero title, mobile touch/layout refinements, and responsive preview label.
+- Resident Loader hybrid distillation contract completed and validator passed under `docs/ResidentLoader_參考技術蒸餾契約_260814.md`.
+- Resident Loader v0.1.0 implemented: safe ZIP importer, IndexedDB pack/binding/settings/history repository, current API and existing Connection Profile adapter, visible daily/letter/story Prompts, per-feature recent-floor count/size/content preview, 8×12 sprite runtime, persistent drag position, independent animation/movement speeds with presets, and mobile-first same-HTML control/history panel.
+- Installable ZIP built at `public/downloads/resident-loader-v0.1.0.zip`; website download CTA and installation README added.
+- Full unit suite: 11 files / 45 tests passing. Website build, Loader build, deterministic package step, and SillyTavern extension validator all pass.
 
 ## Files Completed Or Meaningfully Updated
 
-- Continuity files and project rules.
-- Design-system record, Vite application, pack builder, tests, README, and Pages workflow.
+- Continuity files, project rules, design system, Vite workshop, pack builder, Loader source/build/package scripts, security/context/persistence tests, README, and Pages workflow.
 
 ## Current Blockers
 
-- None. Headless Chrome's native download cancellation was isolated to the QA environment by reproducing it with an unrelated minimal Blob download; app generation and archive contents pass tests.
+- No code/build blocker. A real SillyTavern headed click-through remains the final environment smoke check for profile selection, generation, drag behavior, and reloading IndexedDB history.
 
 ## Next Recommended Step
 
-- Deploy website v0.2, verify the public mobile view, then distill and implement the shared Resident Loader.
+- Commit and push Loader v0.1.0, wait for Pages deployment, verify the public ZIP URL, then run one real SillyTavern installation smoke check.
 
 ## Resume Here
 
@@ -47,4 +50,4 @@ Start by:
 1. Reading `DECISIONS.md`.
 2. Checking the latest `TASK_LOG.md` entry.
 3. Working on the "Next Recommended Step" above.
-4. Begin the shared Loader from the recorded v1 contract; do not add a new API-key form.
+4. Do not add an API-key form or make generated history session-only; both are settled requirements.

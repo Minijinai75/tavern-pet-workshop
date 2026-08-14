@@ -1,0 +1,305 @@
+:root {
+  --resident-pink: #ec4899;
+  --resident-ink: #332934;
+  --resident-muted: #766a78;
+  --resident-paper: #fffafc;
+  --resident-line: rgba(90, 66, 82, 0.18);
+}
+
+#resident-loader-launcher,
+#resident-loader-pet,
+.resident-loader-panel,
+.resident-loader-panel * {
+  box-sizing: border-box;
+}
+
+#resident-loader-launcher {
+  position: fixed;
+  z-index: 29990;
+  left: max(14px, env(safe-area-inset-left));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  min-width: 58px;
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  color: white;
+  background: linear-gradient(135deg, #e24391, #b83e82);
+  box-shadow: 0 10px 30px rgba(104, 38, 76, 0.3);
+  font: 700 14px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+#resident-loader-pet {
+  position: fixed;
+  z-index: 29980;
+  display: block;
+  padding: 0;
+  border: 0;
+  outline-offset: 4px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 800% 1200%;
+  image-rendering: auto;
+  cursor: grab;
+  touch-action: none;
+  filter: drop-shadow(0 8px 12px rgba(30, 20, 35, 0.2));
+}
+
+#resident-loader-pet:active {
+  cursor: grabbing;
+}
+
+.resident-loader-panel {
+  position: fixed;
+  z-index: 30000;
+  top: max(18px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
+  width: min(760px, calc(100vw - 36px));
+  max-height: calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: hidden;
+  color: var(--resident-ink);
+  background: var(--resident-paper);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  box-shadow: 0 24px 80px rgba(31, 20, 29, 0.42);
+  font: 400 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.resident-loader-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  color: white;
+  background: linear-gradient(135deg, #4c3445, #7f4668);
+}
+
+.resident-loader-panel h2,
+.resident-loader-panel h3,
+.resident-loader-panel h4,
+.resident-loader-panel p {
+  margin: 0;
+}
+
+.resident-loader-panel h2 {
+  color: white;
+  font-size: 22px;
+}
+
+.resident-loader-panel h3 {
+  margin-bottom: 12px;
+  font-size: 17px;
+}
+
+.resident-loader-panel h4 {
+  margin: 18px 0 10px;
+  font-size: 15px;
+}
+
+.resident-loader-status {
+  min-height: 46px;
+  padding: 12px 20px;
+  color: var(--resident-muted);
+  background: #fff2f7;
+  border-bottom: 1px solid var(--resident-line);
+}
+
+.resident-loader-status[data-kind="success"] {
+  color: #176b4a;
+  background: #eaf8f1;
+}
+
+.resident-loader-status[data-kind="error"] {
+  color: #9d2941;
+  background: #fff0f2;
+}
+
+.resident-loader-panel-body {
+  display: grid;
+  gap: 14px;
+  max-height: calc(100dvh - 150px);
+  padding: 16px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.resident-loader-section {
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--resident-line);
+  border-radius: 16px;
+}
+
+.resident-loader-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.resident-loader-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: #554a56;
+  font-weight: 650;
+}
+
+.resident-loader-field input,
+.resident-loader-field select,
+.resident-loader-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--resident-ink);
+  background: #fffdfd;
+  border: 1px solid rgba(79, 61, 74, 0.25);
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 400;
+}
+
+.resident-loader-field textarea {
+  min-height: 128px;
+  resize: vertical;
+}
+
+.resident-loader-field input[type="range"] {
+  min-height: 32px;
+  padding: 0;
+  accent-color: var(--resident-pink);
+}
+
+.resident-loader-field output {
+  color: var(--resident-pink);
+  font-weight: 750;
+}
+
+.resident-loader-button {
+  min-height: 44px;
+  padding: 9px 14px;
+  color: #5d3650;
+  background: #fff1f7;
+  border: 1px solid rgba(206, 62, 136, 0.25);
+  border-radius: 10px;
+  font: 700 14px/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.resident-loader-button:hover {
+  background: #ffe4f0;
+}
+
+.resident-loader-button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.resident-loader-panel-header .resident-loader-button {
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.resident-loader-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.resident-loader-presets {
+  margin-bottom: 12px;
+}
+
+.resident-loader-context {
+  margin: 4px 0 14px;
+  padding: 10px 12px;
+  color: var(--resident-muted);
+  background: #fff8fb;
+  border: 1px solid var(--resident-line);
+  border-radius: 10px;
+}
+
+.resident-loader-context summary {
+  min-height: 32px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.resident-loader-context pre {
+  max-height: 220px;
+  margin: 8px 0 0;
+  padding: 10px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--resident-ink);
+  background: white;
+  border-radius: 8px;
+  font: 400 13px/1.55 ui-monospace, "Cascadia Code", monospace;
+}
+
+.resident-loader-record {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 14px;
+  background: #fff8fb;
+  border: 1px solid rgba(207, 83, 145, 0.16);
+  border-radius: 12px;
+}
+
+.resident-loader-record-meta,
+.resident-loader-empty {
+  color: var(--resident-muted);
+  font-size: 13px;
+}
+
+.resident-loader-record-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  #resident-loader-launcher {
+    min-width: 64px;
+    min-height: 48px;
+  }
+
+  .resident-loader-panel {
+    inset: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    width: auto;
+    max-height: none;
+    border-radius: 18px;
+  }
+
+  .resident-loader-panel-body {
+    max-height: calc(100dvh - 126px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    padding: 10px;
+  }
+
+  .resident-loader-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .resident-loader-field input,
+  .resident-loader-field select,
+  .resident-loader-field textarea {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .resident-loader-button {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #resident-loader-launcher,
+  #resident-loader-pet {
+    transition: none;
+  }
+}

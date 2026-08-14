@@ -44,3 +44,12 @@
 - TDD: Added `tests/layout-mode.test.ts`, observed the expected missing-module failure, then implemented `src/layout-mode.ts`; full suite now passes 15 tests.
 - Verification run: Production build passed. Chrome QA at 390px reported `layout=mobile`, preview label「手機版」, zero horizontal overflow, 50.2px download button, 48px copy button, and no console errors. At 1440px it reported `layout=desktop`, preview label「桌面版」, 60.48px title, and zero overflow.
 - Follow-up needed: Commit/push, wait for Pages deployment, verify the live URL, then begin Loader work.
+
+### 2026-08-14 18:58
+
+- Objective: Build the shared Resident Loader immediately after the responsive website, including Mini's added requirement that generated resident conversations never disappear from the same HTML panel.
+- Contract gate: Distilled lifecycle, pack, character binding, current/profile API, Prompt/context, state ownership, SEND/GENERATE boundaries, rollback, and persistent history behavior into `docs/ResidentLoader_參考技術蒸餾契約_260814.md`; hybrid validator passed.
+- What changed: Implemented a data-only ZIP importer, strict v1 manifest/PNG checks, IndexedDB pack/binding/settings/history repository, stable character/chat identity adapter, current API and existing Connection Profile generation, visible/editable/resettable daily/letter/story Prompts, recent-floor count/size/content preview, 8×12 sprite animation, persistent drag position, separate frame/movement speeds plus presets, responsive Loader panel, history copy/delete, ESM build, installable ZIP packaging, and website download CTA.
+- Safety behavior: unknown executable files, unsafe ZIP paths, fake/wrong-size PNGs, unknown manifest fields, and unsupported grids are rejected before persistence. Loader has no SEND method and stores no API URL, Key, or Token.
+- Verification: 11 files / 45 tests passed; website build passed; Loader build/package passed; SillyTavern extension validator passed 10/10 with 0 warnings. Repeated clean package runs produced the same SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5`.
+- Follow-up needed: Commit/push, verify Pages exposes the ZIP, then perform a real headed SillyTavern install/profile/generation/reload smoke check.

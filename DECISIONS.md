@@ -66,6 +66,15 @@
 - Accessibility: responsive mode must preserve keyboard focus, readable contrast, reduced-motion behavior, and no horizontal scrolling.
 - Revisit when: Device testing shows that a different breakpoint better matches the form layout.
 
+### 2026-08-14 - Persistent same-panel generation history
+
+- Status: confirmed by Mini
+- Decision: Letters, conversation extras, and other generated resident text remain visible in the same Resident Loader HTML panel after closing the panel or reloading SillyTavern.
+- Storage: local IndexedDB, partitioned by stable character key, current chat id, and feature. Results are not inserted into SillyTavern chat messages.
+- User control: each record can be copied or explicitly deleted; cancellation performs no write, and deleting history never deletes a pack or chat floor.
+- Failure behavior: generation failure stores no blank record; persistence failure must report that the current result was not saved.
+- Revisit when: Mini requests export/import, search, retention limits, or cross-device sync.
+
 ## Preserved Exceptions
 
 ### 2026-08-14 - No open-source license selected yet
