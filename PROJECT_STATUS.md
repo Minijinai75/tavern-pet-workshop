@@ -4,9 +4,9 @@
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
 - Active task: 發布共用 Resident Loader v0.1.0 與網站下載入口
-- Current phase: Loader v0.1.0 locally packaged; deployment pending
+- Current phase: Loader v0.1.0 publicly deployed; real SillyTavern smoke pending
 - Overall status: in progress
-- Last updated: 2026-08-14 18:58 Asia/Taipei
+- Last updated: 2026-08-14 19:10 Asia/Taipei
 
 ## Current Goal
 
@@ -29,6 +29,7 @@
 - Resident Loader hybrid distillation contract completed and validator passed under `docs/ResidentLoader_參考技術蒸餾契約_260814.md`.
 - Resident Loader v0.1.0 implemented: safe ZIP importer, IndexedDB pack/binding/settings/history repository, current API and existing Connection Profile adapter, visible daily/letter/story Prompts, per-feature recent-floor count/size/content preview, 8×12 sprite runtime, persistent drag position, independent animation/movement speeds with presets, and mobile-first same-HTML control/history panel.
 - Installable ZIP built at `public/downloads/resident-loader-v0.1.0.zip`; website download CTA and installation README added.
+- GitHub Pages deployment `31795059107` passed; public website and Loader ZIP both return HTTP 200, and the served ZIP matches the reproducible local SHA-256.
 - Full unit suite: 11 files / 45 tests passing. Website build, Loader build, deterministic package step, and SillyTavern extension validator all pass.
 
 ## Files Completed Or Meaningfully Updated
@@ -41,7 +42,7 @@
 
 ## Next Recommended Step
 
-- Commit and push Loader v0.1.0, wait for Pages deployment, verify the public ZIP URL, then run one real SillyTavern installation smoke check.
+- Run one real SillyTavern installation smoke check: import → bind → profile/current generation → close/reopen panel → reload → confirm history remains.
 
 ## Resume Here
 

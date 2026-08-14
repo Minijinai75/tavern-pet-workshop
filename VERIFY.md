@@ -32,6 +32,8 @@
 | `npm run build` | Type-check and build updated website with Loader download CTA | PASS | Vite production build completed |
 | `npm run package:loader` twice | Type-check, bundle, and create a reproducible extension package | PASS | Both runs produced `resident-loader-v0.1.0.zip`, 50,502 bytes; SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5` |
 | `validate-extension.js resident-loader` | Validate SillyTavern manifest, JS/CSS and lifecycle exports | PASS | 10 passed / 0 warnings / 0 failures |
+| GitHub Actions run `31795059107` | CI test, reproducible Loader packaging, site build, and Pages deployment | PASS | Build and deploy jobs completed successfully |
+| Public page and Loader ZIP requests | Verify the deployed CTA and downloadable artifact | PASS | Page HTTP 200 with Loader link; ZIP HTTP 200, `application/x-zip-compressed`, 50,502 bytes, SHA-256 matched local package |
 
 ## Unverified Areas
 

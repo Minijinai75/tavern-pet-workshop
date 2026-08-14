@@ -53,3 +53,4 @@
 - Safety behavior: unknown executable files, unsafe ZIP paths, fake/wrong-size PNGs, unknown manifest fields, and unsupported grids are rejected before persistence. Loader has no SEND method and stores no API URL, Key, or Token.
 - Verification: 11 files / 45 tests passed; website build passed; Loader build/package passed; SillyTavern extension validator passed 10/10 with 0 warnings. Repeated clean package runs produced the same SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5`.
 - Follow-up needed: Commit/push, verify Pages exposes the ZIP, then perform a real headed SillyTavern install/profile/generation/reload smoke check.
+- Deployment: commit `f80bbd8` pushed; Pages run `31795059107` passed test, Loader package, site build, and deploy. Public page and ZIP returned HTTP 200; served ZIP was 50,502 bytes with SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5`.
