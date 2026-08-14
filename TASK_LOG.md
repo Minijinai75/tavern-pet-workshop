@@ -94,4 +94,5 @@
 
 - Updated the workshop's offline Loader link to v0.2.2 after the settings-entry bug report.
 - Loader handoff: native SillyTavern collapsible drawer; expanding【酒館桌寵】loads settings inline with visible loading/failure feedback.
-- Remaining: publish v0.2.2 Loader asset, then deploy and verify the updated website link.
+- Published: Loader commit `e443091` / release v0.2.2; website commit `6560f8f`; Loader CI `31808691495` and Pages run `31808697194` passed.
+- Public check: website points to v0.2.2; release ZIP HTTP 200 and hash matched. Remaining: Mini's in-Tavern update smoke.
