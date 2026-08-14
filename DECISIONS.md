@@ -47,6 +47,16 @@
 - Scope: Loader technical distillation, settings UI, persistence, and pack importer.
 - Revisit when: SillyTavern changes the APIs exposed to extensions or a platform limitation prevents enumerating existing connections.
 
+### 2026-08-14 - Per-feature conversation context controls
+
+- Status: confirmed by Mini
+- Decision: Text features such as conversation extras may use recent SillyTavern chat as generation context, and the user may choose how many recent messages each feature receives.
+- Existing evidence: The resident adapter already supports `capture({ recentMessages })`; the context provider reads `manifest.context.recentMessages`; and `letters`, `extras`, and `reviews` currently share the context-aware text generation pipeline.
+- Loader UI: explain that one「樓」means one chat message; allow a recent-message count with `0` meaning disabled; show an estimated context size and a preview of what will be sent.
+- Safety: combine message count with a character/token budget so unusually long messages cannot silently overflow the generation context. Never include hidden reasoning, API keys, or unrelated chats.
+- Scope: User overrides should be saved per character and per text feature, so conversation extras may use a different context window from letters or reviews.
+- Revisit when: SillyTavern changes its chat-message structure or exposes a reliable token estimator.
+
 ## Preserved Exceptions
 
 ### 2026-08-14 - No open-source license selected yet

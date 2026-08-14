@@ -29,3 +29,10 @@
 - Public site: `https://minijinai75.github.io/tavern-pet-workshop/`
 - Repository: `https://github.com/Minijinai75/tavern-pet-workshop`
 - Follow-up needed: Commit this final continuity update, then begin the shared Resident Loader distillation from the existing Jinghe Resident script.
+
+### 2026-08-14 18:02
+
+- Objective: Confirm whether conversation extras can use a user-selected number of recent SillyTavern messages.
+- Evidence: Existing graph and source show `capture({ recentMessages })` in `src/adapters/sillytavern.mjs`, manifest-driven `context.recentMessages` in `src/core/context-provider.mjs`, context character budgeting in `src/core/context-planner.mjs`, and the shared context-aware pipeline for `letters`, `extras`, and `reviews` in `src/features/create-feature-definitions.mjs`.
+- Decision recorded: Loader exposes recent-message count per character and per feature, with `0` to disable, context preview/estimate, and a second size budget to prevent oversized prompts.
+- Follow-up needed: Include this control in Loader schema, settings UI, resolver tests, and migration rules.
