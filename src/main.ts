@@ -2,6 +2,7 @@ import './styles.css';
 import { buildPackArchive, type PackDraft } from './pack-builder';
 import { releaseDownloadUrlLater } from './download';
 import { createGptImagePrompt } from './image-prompt';
+import { applyLayoutMode, getLayoutLabel } from './layout-mode';
 import {
   createDownloadName,
   validateSpriteDimensions,
@@ -30,8 +31,19 @@ const previewPlaceholder = document.querySelector<SVGElement>('#preview-placehol
 const residentWidget = document.querySelector<HTMLElement>('#resident-widget')!;
 const status = document.querySelector<HTMLParagraphElement>('#form-status')!;
 const downloadButton = document.querySelector<HTMLButtonElement>('#download-button')!;
+const previewModeLabel = document.querySelector<HTMLElement>('#preview-mode-label')!;
 
 let activePreviewUrl: string | undefined;
+
+const mobileLayoutQuery = window.matchMedia('(max-width: 720px)');
+
+function syncLayoutMode(): void {
+  const mode = applyLayoutMode(document.documentElement, mobileLayoutQuery.matches);
+  previewModeLabel.textContent = getLayoutLabel(mode);
+}
+
+syncLayoutMode();
+mobileLayoutQuery.addEventListener('change', syncLayoutMode);
 
 function readDraft(): PackDraft {
   return {

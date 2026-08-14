@@ -3,10 +3,10 @@
 ## Snapshot
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
-- Active task: 網站 MVP 已發布，準備進入共用 Resident Loader
-- Current phase: website v0.1 delivered
-- Overall status: complete for website v0.1
-- Last updated: 2026-08-14 17:56 Asia/Taipei
+- Active task: 發布手機操作版後開始共用 Resident Loader
+- Current phase: website v0.2 ready to deploy
+- Overall status: in progress
+- Last updated: 2026-08-14 18:20 Asia/Taipei
 
 ## Current Goal
 
@@ -25,6 +25,7 @@
 - Loader v1 requirements confirmed and recorded: existing SillyTavern API/model selection, per-character prompt overrides, size/position/opacity, separate animation and movement speeds.
 - Unit suite: 12 tests passing. Production build passes.
 - Public GitHub Pages site deployed and verified at `https://minijinai75.github.io/tavern-pet-workshop/`.
+- Responsive v0.2 implemented: explicit mobile/desktop mode detection, smaller hero title, mobile touch/layout refinements, and responsive preview label.
 
 ## Files Completed Or Meaningfully Updated
 
@@ -37,7 +38,7 @@
 
 ## Next Recommended Step
 
-- Distill the existing Jinghe Resident API/model selection and runtime integration into an evidence-backed Loader implementation contract.
+- Deploy website v0.2, verify the public mobile view, then distill and implement the shared Resident Loader.
 
 ## Resume Here
 

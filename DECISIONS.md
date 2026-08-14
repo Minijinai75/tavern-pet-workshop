@@ -57,6 +57,15 @@
 - Scope: User overrides should be saved per character and per text feature, so conversation extras may use a different context window from letters or reviews.
 - Revisit when: SillyTavern changes its chat-message structure or exposes a reliable token estimator.
 
+### 2026-08-14 - Automatic mobile operation mode
+
+- Status: confirmed by Mini
+- Decision: The workshop automatically switches at a `720px` viewport breakpoint instead of asking users to choose a device mode.
+- Mobile behavior: smaller hero title, one-column workflow, 16px form text to avoid mobile browser zoom, at least 44px touch targets, full-width primary actions, compact cards/preview, safe-area bottom padding, and a visible「手機版」preview label.
+- Desktop behavior: retain the two-column builder/preview layout while reducing the hero title from the original oversized treatment.
+- Accessibility: responsive mode must preserve keyboard focus, readable contrast, reduced-motion behavior, and no horizontal scrolling.
+- Revisit when: Device testing shows that a different breakpoint better matches the form layout.
+
 ## Preserved Exceptions
 
 ### 2026-08-14 - No open-source license selected yet

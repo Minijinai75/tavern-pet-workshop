@@ -23,6 +23,10 @@
 | GitHub Actions run `31790068216` | CI test, build, and Pages deploy | PASS | Build and deploy jobs completed successfully |
 | `Invoke-WebRequest https://minijinai75.github.io/tavern-pet-workshop/` | Confirm public availability | PASS | HTTP 200; expected title and copy button present |
 | Puppeteer against public Pages URL | Confirm deployed JS/CSS and mobile behavior | PASS | One-click copy worked; generated prompt contains grid and row-12 contract; no console errors; no horizontal overflow at 390 px |
+| `npm test` after responsive update | Verify mobile/desktop mode behavior and regressions | PASS | 5 test files, 15 tests passed |
+| `npm run build` after responsive update | Type-check and bundle v0.2 | PASS | Vite production build completed |
+| Chrome 390px responsive QA | Verify actual mobile operation mode | PASS | `layout=mobile`,「手機版」label, 37.05px title, 16px input text, 48px+ primary actions, zero overflow, no console errors |
+| Chrome 1440px responsive QA | Verify reduced title and desktop layout | PASS | `layout=desktop`,「桌面版」label, 60.48px title, zero overflow |
 
 ## Unverified Areas
 

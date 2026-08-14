@@ -36,3 +36,11 @@
 - Evidence: Existing graph and source show `capture({ recentMessages })` in `src/adapters/sillytavern.mjs`, manifest-driven `context.recentMessages` in `src/core/context-provider.mjs`, context character budgeting in `src/core/context-planner.mjs`, and the shared context-aware pipeline for `letters`, `extras`, and `reviews` in `src/features/create-feature-definitions.mjs`.
 - Decision recorded: Loader exposes recent-message count per character and per feature, with `0` to disable, context preview/estimate, and a second size budget to prevent oversized prompts.
 - Follow-up needed: Include this control in Loader schema, settings UI, resolver tests, and migration rules.
+
+### 2026-08-14 18:20
+
+- Objective: Reduce the oversized hero title and automatically present a mobile-friendly operation layout.
+- What changed: Added a `720px` match-media layout mode with a live mobile/desktop preview label; reduced desktop title to 60.48px at 1440px and mobile title to 37.05px at 390px; improved mobile spacing, safe areas, one-column form flow, 16px inputs, and 48px+ primary touch targets. Persisted the refreshed UI design system.
+- TDD: Added `tests/layout-mode.test.ts`, observed the expected missing-module failure, then implemented `src/layout-mode.ts`; full suite now passes 15 tests.
+- Verification run: Production build passed. Chrome QA at 390px reported `layout=mobile`, preview label「手機版」, zero horizontal overflow, 50.2px download button, 48px copy button, and no console errors. At 1440px it reported `layout=desktop`, preview label「桌面版」, 60.48px title, and zero overflow.
+- Follow-up needed: Commit/push, wait for Pages deployment, verify the live URL, then begin Loader work.
