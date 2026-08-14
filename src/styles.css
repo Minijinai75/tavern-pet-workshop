@@ -116,10 +116,12 @@ input[type="color"] { width: 2.2rem; height: 2.2rem; padding: .1rem; border: 0; 
 .frame-editor > div:first-child, .frame-editor .calibrator-actions { grid-column: 1 / -1; }
 #frame-editor-canvas { width: min(256px, 100%); height: auto; background-image: linear-gradient(45deg,#eee 25%,transparent 25%),linear-gradient(-45deg,#eee 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#eee 75%),linear-gradient(-45deg,transparent 75%,#eee 75%); background-position: 0 0,0 8px,8px -8px,-8px 0; background-size: 16px 16px; border: 1px solid #cbb7c3; border-radius: .65rem; cursor: move; touch-action: none; }
 .frame-editor-controls { display: grid; gap: .25rem; }
+.frame-editor-controls strong { margin: .25rem 0 .1rem; color: var(--ink); font-size: .82rem; }
 .frame-editor-controls label { margin-bottom: .45rem; }
 .frame-editor-controls input { width: 100%; accent-color: var(--pink-700); }
 .calibrator-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
 .calibrator-actions .download-button { min-height: 2.65rem; }
+.calibrator-limit { grid-column: 1 / -1; margin: 0; padding: .7rem .8rem; color: #8a3f18; background: #fff4e8; border: 1px solid #f4c89d; border-radius: .65rem; font-size: .78rem; line-height: 1.55; }
 .field-help { margin: -.35rem 0 1.2rem; padding: .8rem 1rem; color: #694256; background: #fff5f9; border-left: 3px solid var(--pink-300); border-radius: 0 .6rem .6rem 0; font-size: .84rem; line-height: 1.6; }
 details { border: 1px solid var(--line); border-radius: .85rem; overflow: hidden; }
 summary { padding: .85rem 1rem; color: var(--wine); background: #fff7fa; cursor: pointer; font-weight: 900; }

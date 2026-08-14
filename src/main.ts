@@ -8,7 +8,7 @@ import {
   canvasToPngFile,
   composeAdjustedSpriteSheet,
   fitBoundsIntoSafeArea,
-  frameRect,
+  sourceRectForFrame,
   type FrameAdjustment,
   type FrameInspection,
 } from './sprite-calibrator';
@@ -57,6 +57,10 @@ const frameEditorCanvas = document.querySelector<HTMLCanvasElement>('#frame-edit
 const frameScale = document.querySelector<HTMLInputElement>('#frame-scale')!;
 const frameOffsetX = document.querySelector<HTMLInputElement>('#frame-offset-x')!;
 const frameOffsetY = document.querySelector<HTMLInputElement>('#frame-offset-y')!;
+const frameCropSize = document.querySelector<HTMLInputElement>('#frame-crop-size')!;
+const frameSourceOffsetX = document.querySelector<HTMLInputElement>('#frame-source-offset-x')!;
+const frameSourceOffsetY = document.querySelector<HTMLInputElement>('#frame-source-offset-y')!;
+const expandCurrentFrame = document.querySelector<HTMLButtonElement>('#expand-current-frame')!;
 const fitCurrentFrame = document.querySelector<HTMLButtonElement>('#fit-current-frame')!;
 const applyCurrentFrame = document.querySelector<HTMLButtonElement>('#apply-current-frame')!;
 const fitAllFrames = document.querySelector<HTMLButtonElement>('#fit-all-frames')!;
@@ -150,6 +154,9 @@ function controlsAdjustment(): FrameAdjustment {
     scale: Number(frameScale.value) / 100,
     offsetX: Number(frameOffsetX.value),
     offsetY: Number(frameOffsetY.value),
+    cropSize: Number(frameCropSize.value),
+    sourceOffsetX: Number(frameSourceOffsetX.value),
+    sourceOffsetY: Number(frameSourceOffsetY.value),
   };
 }
 
@@ -157,14 +164,17 @@ function setAdjustmentControls(adjustment: FrameAdjustment): void {
   frameScale.value = String(Math.round(adjustment.scale * 100));
   frameOffsetX.value = String(Math.round(adjustment.offsetX));
   frameOffsetY.value = String(Math.round(adjustment.offsetY));
+  frameCropSize.value = String(Math.round(adjustment.cropSize ?? 128));
+  frameSourceOffsetX.value = String(Math.round(adjustment.sourceOffsetX ?? 0));
+  frameSourceOffsetY.value = String(Math.round(adjustment.sourceOffsetY ?? 0));
 }
 
 function drawFrameEditor(): void {
   if (!sourceImage) return;
   const context = frameEditorCanvas.getContext('2d');
   if (!context) return;
-  const rect = frameRect(selectedFrame);
   const adjustment = controlsAdjustment();
+  const sourceRect = sourceRectForFrame(selectedFrame, adjustment);
   context.setTransform(1, 0, 0, 1, 0, 0);
   context.clearRect(0, 0, 256, 256);
   context.save();
@@ -174,7 +184,17 @@ function drawFrameEditor(): void {
   context.clip();
   context.translate(64 + adjustment.offsetX, 64 + adjustment.offsetY);
   context.scale(adjustment.scale, adjustment.scale);
-  context.drawImage(sourceImage, rect.x, rect.y, 128, 128, -64, -64, 128, 128);
+  context.drawImage(
+    sourceImage,
+    sourceRect.x,
+    sourceRect.y,
+    sourceRect.width,
+    sourceRect.height,
+    -64,
+    -64,
+    128,
+    128,
+  );
   context.restore();
   context.save();
   context.scale(2, 2);
@@ -337,15 +357,21 @@ avatarFile.addEventListener('change', async () => {
   const unsafeCount = sourceInspections.filter((item) => item.unsafe).length;
   setStatus(
     unsafeCount
-      ? `尺寸正確，但有 ${unsafeCount} 格碰到安全邊界，請在下方檢查或一鍵縮進。`
+      ? `尺寸正確，但有 ${unsafeCount} 格碰到舊格線。請在下方回原圖逐格取景；也可先把問題格全部展開再檢查。`
       : '圖集尺寸與 96 格安全邊界都正確。',
     unsafeCount ? 'neutral' : 'success',
   );
 });
 
-for (const input of [frameScale, frameOffsetX, frameOffsetY]) {
+for (const input of [frameScale, frameOffsetX, frameOffsetY, frameCropSize, frameSourceOffsetX, frameSourceOffsetY]) {
   input.addEventListener('input', drawFrameEditor);
 }
+
+expandCurrentFrame.addEventListener('click', () => {
+  frameCropSize.value = String(Math.max(160, Number(frameCropSize.value)));
+  drawFrameEditor();
+  setStatus('已把本格取景範圍展開到舊格線之外；現在拖曳預覽，把完整角色對回綠色安全框。', 'neutral');
+});
 
 fitCurrentFrame.addEventListener('click', () => {
   const bounds = sourceInspections[selectedFrame]?.bounds;
@@ -361,27 +387,28 @@ applyCurrentFrame.addEventListener('click', () => {
 
 fitAllFrames.addEventListener('click', () => {
   sourceInspections.forEach((inspection) => {
-    if (inspection.unsafe && inspection.bounds) {
-      frameAdjustments.set(inspection.frame, fitBoundsIntoSafeArea(inspection.bounds));
+    if (inspection.unsafe) {
+      const previous = frameAdjustments.get(inspection.frame) ?? { scale: 1, offsetX: 0, offsetY: 0 };
+      frameAdjustments.set(inspection.frame, { ...previous, cropSize: Math.max(160, previous.cropSize ?? 128) });
     }
   });
   void rebuildCorrectedSprite();
 });
 
-let editorDrag: { x: number; y: number; offsetX: number; offsetY: number } | undefined;
+let editorDrag: { x: number; y: number; sourceOffsetX: number; sourceOffsetY: number } | undefined;
 frameEditorCanvas.addEventListener('pointerdown', (event) => {
   editorDrag = {
     x: event.clientX,
     y: event.clientY,
-    offsetX: Number(frameOffsetX.value),
-    offsetY: Number(frameOffsetY.value),
+    sourceOffsetX: Number(frameSourceOffsetX.value),
+    sourceOffsetY: Number(frameSourceOffsetY.value),
   };
   frameEditorCanvas.setPointerCapture?.(event.pointerId);
 });
 frameEditorCanvas.addEventListener('pointermove', (event) => {
   if (!editorDrag) return;
-  frameOffsetX.value = String(Math.max(-48, Math.min(48, Math.round(editorDrag.offsetX + (event.clientX - editorDrag.x) / 2))));
-  frameOffsetY.value = String(Math.max(-48, Math.min(48, Math.round(editorDrag.offsetY + (event.clientY - editorDrag.y) / 2))));
+  frameSourceOffsetX.value = String(Math.max(-96, Math.min(96, Math.round(editorDrag.sourceOffsetX - (event.clientX - editorDrag.x) / 2))));
+  frameSourceOffsetY.value = String(Math.max(-96, Math.min(96, Math.round(editorDrag.sourceOffsetY - (event.clientY - editorDrag.y) / 2))));
   drawFrameEditor();
 });
 const endEditorDrag = (event: PointerEvent): void => {

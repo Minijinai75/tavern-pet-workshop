@@ -79,3 +79,12 @@
 - Remaining: commit/push, Pages deployment, public URL/release-link verification, and real headed SillyTavern smoke.
 - Published: website commit `8dab9d8`; Pages run `31806001648` passed. The live site returned HTTP 200 and contains the【酒館桌寵】name and v0.2.1 release link.
 - Remaining: real headed SillyTavern smoke only.
+
+### 2026-08-14 21:59
+
+- Bug report: moving/scaling an already clipped 128×128 cell could not restore pixels that existed just outside the old cell boundary.
+- Root cause: both editor preview and recomposition always sampled only the original fixed cell, so destination transforms had no access to neighboring source pixels.
+- RED: cross-boundary source-crop tests failed because no source-window function existed.
+- Fix: added per-frame source crop size and source X/Y offsets; editor dragging now moves the crop over the full original atlas, while output scale/position remains a separate second step. Added explicit whole-PNG-edge limitation warning.
+- Verification: 7 files / 21 tests passed; production build passed; headed Chrome loaded the real `睿.png`, rendered all 96 cells, expanded crop 128→160, shifted source -18/+12, and confirmed the editor canvas pixels changed.
+- Remaining: publish and verify the corrected Pages build.

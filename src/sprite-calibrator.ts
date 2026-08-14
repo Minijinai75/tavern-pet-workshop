@@ -21,6 +21,9 @@ export interface FrameAdjustment {
   scale: number;
   offsetX: number;
   offsetY: number;
+  cropSize?: number;
+  sourceOffsetX?: number;
+  sourceOffsetY?: number;
 }
 
 export interface FrameInspection {
@@ -37,6 +40,20 @@ export function frameRect(frame: number): { x: number; y: number; width: number;
     y: Math.floor(safe / SPRITE_COLUMNS) * SPRITE_FRAME_SIZE,
     width: SPRITE_FRAME_SIZE,
     height: SPRITE_FRAME_SIZE,
+  };
+}
+
+export function sourceRectForFrame(
+  frame: number,
+  adjustment: FrameAdjustment,
+): { x: number; y: number; width: number; height: number } {
+  const rect = frameRect(frame);
+  const cropSize = Math.max(96, Math.min(256, adjustment.cropSize ?? SPRITE_FRAME_SIZE));
+  return {
+    x: rect.x + SPRITE_FRAME_SIZE / 2 + (adjustment.sourceOffsetX ?? 0) - cropSize / 2,
+    y: rect.y + SPRITE_FRAME_SIZE / 2 + (adjustment.sourceOffsetY ?? 0) - cropSize / 2,
+    width: cropSize,
+    height: cropSize,
   };
 }
 
@@ -107,6 +124,7 @@ export function composeAdjustedSpriteSheet(
   for (let frame = 0; frame < SPRITE_FRAME_COUNT; frame += 1) {
     const rect = frameRect(frame);
     const adjustment = adjustments.get(frame) ?? { scale: 1, offsetX: 0, offsetY: 0 };
+    const sourceRect = sourceRectForFrame(frame, adjustment);
     context.save();
     context.beginPath();
     context.rect(rect.x, rect.y, rect.width, rect.height);
@@ -118,10 +136,10 @@ export function composeAdjustedSpriteSheet(
     context.scale(adjustment.scale, adjustment.scale);
     context.drawImage(
       source,
-      rect.x,
-      rect.y,
-      rect.width,
-      rect.height,
+      sourceRect.x,
+      sourceRect.y,
+      sourceRect.width,
+      sourceRect.height,
       -SPRITE_FRAME_SIZE / 2,
       -SPRITE_FRAME_SIZE / 2,
       SPRITE_FRAME_SIZE,

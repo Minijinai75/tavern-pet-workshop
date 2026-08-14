@@ -147,24 +147,31 @@
                     <h3 id="calibrator-title">96 格安全檢查</h3>
                     <p id="calibrator-summary">正在檢查每一格的透明邊界…</p>
                   </div>
-                  <button class="copy-button" id="fit-all-frames" type="button">問題格全部安全縮進</button>
+                  <button class="copy-button" id="fit-all-frames" type="button">問題格全部先展開</button>
                 </div>
                 <div class="frame-grid" id="frame-grid" aria-label="96 格 Sprite Sheet 檢查結果"></div>
                 <div class="frame-editor">
                   <div>
                     <strong id="selected-frame-label">第 1 格</strong>
-                    <p>紅框代表角色碰到格子邊界。可先按自動校正，再用滑桿微調。</p>
+                    <p>這裡會回到整張原圖取景，不再鎖死在舊的 128×128 格內。直接拖曳預覽可把格外的頭髮、手腳拉回來；綠色內框是 8px 安全範圍。</p>
                   </div>
                   <canvas id="frame-editor-canvas" width="256" height="256" aria-label="目前影格裁切預覽"></canvas>
                   <div class="frame-editor-controls">
+                    <strong>第一步：回原圖重新取景</strong>
+                    <label><span>取景範圍（越大，抓回格外內容越多）</span><input id="frame-crop-size" type="range" min="128" max="224" value="128" /></label>
+                    <label><span>原圖取景左右</span><input id="frame-source-offset-x" type="range" min="-96" max="96" value="0" /></label>
+                    <label><span>原圖取景上下</span><input id="frame-source-offset-y" type="range" min="-96" max="96" value="0" /></label>
+                    <strong>第二步：放進 128×128 格內</strong>
                     <label><span>角色大小</span><input id="frame-scale" type="range" min="50" max="140" value="100" /></label>
                     <label><span>左右位置</span><input id="frame-offset-x" type="range" min="-48" max="48" value="0" /></label>
                     <label><span>上下位置</span><input id="frame-offset-y" type="range" min="-48" max="48" value="0" /></label>
                   </div>
                   <div class="calibrator-actions">
-                    <button class="copy-button" id="fit-current-frame" type="button">本格自動放進安全區</button>
+                    <button class="copy-button" id="expand-current-frame" type="button">本格先從格外找回</button>
+                    <button class="copy-button" id="fit-current-frame" type="button" title="只適合角色沒有被舊格線切斷的影格">本格縮進安全區</button>
                     <button class="download-button" id="apply-current-frame" type="button">套用本格校正</button>
                   </div>
+                  <p class="calibrator-limit">如果頭髮或手腳在整張 PNG 的最外緣就已經消失，網站無法補回不存在的像素；那一格仍需要回 GPT 重生。</p>
                 </div>
               </section>
             </fieldset>

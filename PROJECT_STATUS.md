@@ -37,6 +37,7 @@
 - Browser-local 96-frame alpha safety inspection, per-frame drag/scale editor, one-click unsafe-frame fit, and exact Canvas PNG recomposition implemented.
 - Real `睿.png` browser QA passed: 96 warnings before correction, 0 after; uploaded preview hides the pink mascot; desktop/mobile have no horizontal overflow.
 - Loader v0.2.1 uses the user-facing name【酒館桌寵】, lives in the extensions drawer, splits pet-click letter/story archives, and makes daily Prompt manual generation operational without enabling automatic calls.
+- Sprite correction now re-crops from the full original atlas: each frame can cross the old 128×128 boundary with an adjustable source window and source offsets before output placement.
 
 ## Files Completed Or Meaningfully Updated
 

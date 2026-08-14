@@ -3,6 +3,7 @@ import {
   analyzeSpriteFrames,
   fitBoundsIntoSafeArea,
   frameRect,
+  sourceRectForFrame,
 } from '../src/sprite-calibrator';
 
 describe('sprite frame calibration', () => {
@@ -30,5 +31,25 @@ describe('sprite frame calibration', () => {
     expect(adjustment.scale).toBeLessThan(1);
     expect(Number.isFinite(adjustment.offsetX)).toBe(true);
     expect(Number.isFinite(adjustment.offsetY)).toBe(true);
+  });
+
+  it('can move the source crop across the old 128px cell boundary to recover clipped pixels', () => {
+    expect(sourceRectForFrame(9, {
+      scale: 1,
+      offsetX: 0,
+      offsetY: 0,
+      sourceOffsetX: -18,
+      sourceOffsetY: 12,
+      cropSize: 156,
+    })).toEqual({ x: 96, y: 126, width: 156, height: 156 });
+  });
+
+  it('keeps the old exact-cell crop as the default', () => {
+    expect(sourceRectForFrame(9, { scale: 1, offsetX: 0, offsetY: 0 })).toEqual({
+      x: 128,
+      y: 128,
+      width: 128,
+      height: 128,
+    });
   });
 });
