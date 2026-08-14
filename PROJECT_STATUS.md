@@ -3,10 +3,10 @@
 ## Snapshot
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
-- Active task: 發布 96 格校正工具與【酒館桌寵】v0.2.0 安裝入口
-- Current phase: 本機實作、完整測試與睿圖瀏覽器 QA 已通過
-- Overall status: in progress
-- Last updated: 2026-08-14 21:24 Asia/Taipei
+- Active task: 修正 96 格工具無法取回舊格線外像素
+- Current phase: 全圖重新取景工具已發布並通過公開驗證
+- Overall status: complete; waiting for Mini's hands-on crop check
+- Last updated: 2026-08-14 22:01 Asia/Taipei
 
 ## Current Goal
 

@@ -51,6 +51,7 @@
 | GitHub Pages run `31806001648` and public page request | Deploy and verify v0.2.1 handoff | PASS | Run completed; public page shows【酒館桌寵】and the v0.2.1 release asset link |
 | Cross-boundary crop RED/GREEN tests | Prove a frame can sample outside its old fixed cell | PASS | 2 new tests; suite now 7 files / 21 tests |
 | Headed Chrome/CDP with real `睿.png` | Verify full-atlas source recrop controls | PASS | 96 cells; crop 128→160; source offsets -18/+12; editor canvas hash changed `1856235845`→`2822728570` |
+| GitHub Pages run `31807400771` and public-page request | Publish cross-boundary crop fix | PASS | Commit `4c6c957`; live page HTTP 200 and contains full-atlas crop controls, recovery button, and edge limitation warning |
 
 ## Unverified Areas
 

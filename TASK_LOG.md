@@ -87,4 +87,5 @@
 - RED: cross-boundary source-crop tests failed because no source-window function existed.
 - Fix: added per-frame source crop size and source X/Y offsets; editor dragging now moves the crop over the full original atlas, while output scale/position remains a separate second step. Added explicit whole-PNG-edge limitation warning.
 - Verification: 7 files / 21 tests passed; production build passed; headed Chrome loaded the real `睿.png`, rendered all 96 cells, expanded crop 128→160, shifted source -18/+12, and confirmed the editor canvas pixels changed.
-- Remaining: publish and verify the corrected Pages build.
+- Published: commit `4c6c957`; Pages run `31807400771` passed. Public page returned HTTP 200 with the full-atlas crop controls, recovery button, and whole-PNG-edge warning.
+- Remaining: Mini's hands-on frame crop check; no publishing blocker.
