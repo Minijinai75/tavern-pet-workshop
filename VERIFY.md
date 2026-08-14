@@ -47,6 +47,7 @@
 | `npm test` after 96-frame calibrator | Verify atlas analysis and existing workshop behavior | PASS | 7 files / 19 tests |
 | `npm run build` after calibrator UI | Type-check and bundle static Pages site | PASS | Vite production build completed |
 | Playwright/Chrome with real `睿.png` | Verify uploaded preview, 96-cell warnings, recomposition, and responsive layout | PASS | mascot `display:none`; 96 unsafe → 0 after auto-fit; zero console errors and zero horizontal overflow at 1440px/390px |
+| `npm test` / `npm run build` before v0.2.1 link release | Verify website behavior and production bundle | PASS | 7 files / 19 tests; Vite production build completed |
 
 ## Unverified Areas
 

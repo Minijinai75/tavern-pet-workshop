@@ -36,7 +36,7 @@
 - Full unit suite: 11 files / 45 tests passing. Website build, Loader build, deterministic package step, and SillyTavern extension validator all pass.
 - Browser-local 96-frame alpha safety inspection, per-frame drag/scale editor, one-click unsafe-frame fit, and exact Canvas PNG recomposition implemented.
 - Real `睿.png` browser QA passed: 96 warnings before correction, 0 after; uploaded preview hides the pink mascot; desktop/mobile have no horizontal overflow.
-- Loader v0.2.0 uses the user-facing name【酒館桌寵】, lives in the extensions drawer, and splits pet-click letter/story archives into separate reading views.
+- Loader v0.2.1 uses the user-facing name【酒館桌寵】, lives in the extensions drawer, splits pet-click letter/story archives, and makes daily Prompt manual generation operational without enabling automatic calls.
 
 ## Files Completed Or Meaningfully Updated
 
@@ -44,11 +44,11 @@
 
 ## Current Blockers
 
-- Publishing is pending this handoff. A real SillyTavern repo-install smoke remains.
+- v0.2.1 release-link publishing is pending this handoff. A real SillyTavern repo-install smoke remains.
 
 ## Next Recommended Step
 
-- Push both repositories, publish Loader v0.2.0, verify Pages and release URLs, then run a real SillyTavern update smoke.
+- Push both repositories, publish Loader v0.2.1, verify Pages and release URLs, then run a real SillyTavern update smoke.
 
 ## Resume Here
 

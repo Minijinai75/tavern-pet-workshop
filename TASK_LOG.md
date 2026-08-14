@@ -75,4 +75,5 @@
 - Implementation: added exact 96-cell mapping, alpha safety scanning, frame selection, drag/scale controls, one-frame/all-problem auto-fit, Canvas PNG recomposition, corrected-file pack export, and explicit hidden-style protection for the mascot.
 - Browser QA with the real `睿.png`: 96 frames rendered; 96 unsafe frames detected before correction and 0 after one-click correction; mascot computed display `none`; no console errors or horizontal overflow at desktop and 390px mobile.
 - Verification: website 7 files / 19 tests passed; production build passed.
-- Remaining: commit/push, Pages deployment, public URL/release-link verification.
+- v0.2.1 handoff: website release buttons now point to the Loader v0.2.1 asset containing operational manual daily-companion generation.
+- Remaining: commit/push, Pages deployment, public URL/release-link verification, and real headed SillyTavern smoke.

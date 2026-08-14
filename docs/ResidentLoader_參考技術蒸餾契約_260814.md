@@ -1,8 +1,8 @@
 # Resident Loader 參考技術蒸餾契約
 
-> 狀態：v0.2.0 已依 Mini 拍板流程實作並通過自動與瀏覽器驗證
+> 狀態：v0.2.1 已依 Mini 拍板流程實作；手動日常陪伴與完整自動驗證均已通過，待公開發布
 > 路由：hybrid
-> 更新時間：26-08-14 21:24（Asia/Taipei）
+> 更新時間：26-08-14 21:39（Asia/Taipei）
 > 目標：把景和 Resident 現有可驗證行為蒸餾成一個只安裝一次、可匯入多個資料包的 SillyTavern 共用 Loader。
 
 本輪邊界：Loader v1 只處理資料型角色包、桌寵動畫、酒館生成與本機歷史；不接手角色卡的 MVU 狀態交易，也不修改或開關世界書。未來若加入 MVU／世界書能力，必須另立 adapter、交易與回滾契約，不能藉本次匯入格式偷偷取得權限。
@@ -62,6 +62,10 @@
   → 選 current API 或 profile id → GENERATE（不 SEND）
   → 將結果 STATE_WRITE 到本機歷史 → RENDER_ONLY 顯示在同一個 HTML 面板
 
+設定頁按「讓桌寵說一句」→ USER 明示 GENERATE
+  → 角色卡可見描述／性格／情境＋日常 Prompt＋最近 N 樓
+  → 結果只顯示暫時桌寵泡泡；不 SEND、不寫聊天樓層；自動生成預設關閉
+
 CHAT_CHANGED → unmount 舊角色、撤銷 Blob URL／listeners
   → 重新查目前角色 binding → mount 新 pack；不得串角色狀態
 
@@ -76,6 +80,7 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 | 目前角色綁定 | Loader IndexedDB | binding UI／lifecycle | `resident-loader/v1/bindings/{characterKey}` | key 優先 card/avatar id；名稱只作顯示與降級 |
 | USER Prompt 覆寫 | ST `extension_settings`；無 API 才 namespaced localStorage | settings／context builder | characterKey＋feature | 空值代表沿用 pack default；一鍵重設 |
 | API 模式／Profile | 同上 | settings／generation adapter | characterKey＋feature | 只存 `current` 或 profile id；絕不存 URL/Key/Token |
+| 日常陪伴連線／最近樓數 | 同上 | settings／manual idle generation | characterKey＋idle | 預設 current＋4 樓；自動生成關閉 |
 | 最近樓數 | 同上 | settings／context builder | characterKey＋feature | 整數 0–50；0 完全不讀 chat context |
 | 尺寸、位置、透明度 | 同上 | settings／sprite | characterKey＋viewport class | desktop/mobile 分開；超界自動夾回視窗 |
 | 動畫速度 | 同上 | settings／sprite scheduler | characterKey | frame interval 50–1000 ms |
@@ -93,6 +98,7 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 | 改 Prompt、尺寸、速度、樓數 | 是 | 否 | 否 | 是 | 是 | 驗證失敗保留舊值 |
 | 自動待機氣泡／走動 | 是 | 否 | 否 | 否 | 是 | runtime 停止即可 |
 | 明示生成書信／番外 | 是 | 否 | 是 | 成功後保存歷史 | 是 | 生成失敗不寫入空紀錄，顯示能力錯誤 |
+| 明示生成日常泡泡 | 是 | 否 | 是 | 只保存設定，不保存泡泡 | 是 | 失敗只顯示錯誤；不得啟動自動 timer |
 | 開啟／切換生成歷史 | 是 | 否 | 否 | 否 | 是 | 空狀態不呼叫模型 |
 | 一鍵複製圖片指令／歷史結果 | 是 | 否 | 否 | 否 | 是 | Clipboard 失敗改手動選取 |
 | 刪除單筆／清空歷史 | 是 | 否 | 否 | USER 確認後才是 | 是 | 取消即 0 寫入；不影響 pack 與聊天樓層 |
@@ -168,6 +174,7 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 - [x] 點桌寵只開「來信紀錄／對話番外紀錄」兩鍵快捷選單；各自以 HTML 閱讀視圖呈現，按生成才呼叫模型且不新增聊天樓層。（Mini，26-08-14 20:55）
 - [x] 「指定 Profile」改名為「指定連線設定檔案」；匯入按鈕加強辨識，並提供不刪資料的解除角色綁定。（Mini，26-08-14 20:55）
 - [x] 工坊新增 96 格 browser-local 校正；上傳 PNG 後預覽不再顯示粉色小惡魔，錯誤時改用中性提示。（Mini，26-08-14 20:55）
+- [x] 日常陪伴 Prompt 必須實際可用：由 USER 按下才帶目前角色卡可見資料與自由設定最近樓數生成桌寵泡泡；自動生成預設關閉。（Mini「其他 OK」，26-08-14 20:55）
 
 ## 10. 回歸與驗收計畫
 
@@ -193,6 +200,7 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 | 解除綁定 | 已綁定角色按解除並確認 | sprite 卸載；pack、設定與歷史仍在 | repository unit＋ST 人工 | binding/history assertions |
 | 逐格安全邊界 | 上傳內容碰到格邊的 8×12 PNG | 問題格標示；可拖移縮放並重組精確 1024×1536 PNG | unit＋browser QA | alpha scan＋canvas dimensions |
 | PNG 預覽替換 | 選擇合法或不合法 PNG | 粉色小惡魔立即隱藏；合法圖顯示本人素材，錯誤顯示中性狀態 | jsdom＋browser QA | visibility assertions |
+| 手動日常陪伴 | 設定 Prompt／樓數／連線後按「讓桌寵說一句」 | 角色卡＋最近樓數進 Prompt；GENERATE 1、SEND 0；結果只在泡泡 | unit＋provider spy＋ST 人工 | prompt／call counts／DOM |
 | cleanup | 切聊天、停用、重啟多次 | 只有一組 listener／pet／timer；Blob URL 撤銷 | unit＋人工 | resource counters |
 | Build/package | `npm test && npm run build:loader` | 測試全綠；產出可安裝 ZIP | CI | artifact hash |
 
