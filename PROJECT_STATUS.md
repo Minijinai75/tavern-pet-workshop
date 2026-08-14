@@ -4,9 +4,9 @@
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
 - Active task: 讓同一橫排 8 格快速統一大小與上下基準
-- Current phase: 橫排校正已實作並通過測試與瀏覽器 DOM 驗證，準備發布
-- Overall status: implementation complete; publishing
-- Last updated: 2026-08-14 22:32 Asia/Taipei
+- Current phase: 橫排校正已發布；網站離線 Loader 連結更新到 v0.3.0
+- Overall status: complete; waiting for public Pages verification
+- Last updated: 2026-08-14 22:55 Asia/Taipei
 
 ## Current Goal
 
@@ -40,6 +40,7 @@
 - Sprite correction now re-crops from the full original atlas: each frame can cross the old 128×128 boundary with an adjustable source window and source offsets before output placement.
 - Workshop offline-download links now target Loader v0.2.2, whose extension entry uses SillyTavern's native collapsible drawer and loads settings on expansion.
 - 96 格校正器可把目前影格的取景範圍、原圖上下、輸出大小與格內上下套用到同一橫排 8 格，同時保留每格各自的左右取景與左右位置；此流程貼合 GPT 通常在橫排內對齊動畫的輸出特性。
+- Website offline fallback now targets【酒館桌寵】v0.3.0: compact extension entry, standalone settings/diary/board HTML views, TXT export, character-card switching, and read-only per-feature always-on world-info selection.
 
 ## Files Completed Or Meaningfully Updated
 
@@ -51,7 +52,7 @@
 
 ## Next Recommended Step
 
-- 發布橫排校正；再把 Loader 擴充欄縮成入口，設定／來信／番外改為三個獨立 HTML 閱讀或操作頁。
+- Verify the public v0.3.0 link, then run Mini's in-Tavern update smoke.
 
 ## Resume Here
 

@@ -4,7 +4,7 @@
 
 - 工坊：<https://minijinai75.github.io/tavern-pet-workshop/>
 - Loader repo 安裝網址：<https://github.com/Minijinai75/resident-loader>
-- 【酒館桌寵】離線 ZIP：<https://github.com/Minijinai75/resident-loader/releases/download/v0.2.2/resident-loader-v0.2.2.zip>
+- 【酒館桌寵】離線 ZIP：<https://github.com/Minijinai75/resident-loader/releases/download/v0.3.0/resident-loader-v0.3.0.zip>
 
 ## 目前能做什麼
 
@@ -15,6 +15,7 @@
 - 圖片、角色資料與 Prompt 不會傳到伺服器。
 - 上傳圖集後會檢查 96 格透明安全邊界；可逐格拖移／縮放或一鍵安全縮進，再於瀏覽器本機重組標準 PNG。
 - 安裝【酒館桌寵】後，可匯入角色包、綁定目前角色、選酒館既有連線設定檔案，並從桌寵開啟持久保存的來信／番外閱讀頁。
+- Loader v0.3.0 的擴充欄只保留快捷入口；完整設定、來信日記與番外留言板各自獨立開啟，紀錄可下載 TXT，三種生成可分別勾選角色目前使用的常駐世界書條目。
 
 ## 本機開發
 

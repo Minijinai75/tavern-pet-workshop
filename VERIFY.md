@@ -54,6 +54,8 @@
 | GitHub Pages run `31807400771` and public-page request | Publish cross-boundary crop fix | PASS | Commit `4c6c957`; live page HTTP 200 and contains full-atlas crop controls, recovery button, and edge limitation warning |
 | Row-alignment RED/GREEN tests | Keep each animation row visually stable without losing horizontal motion | PASS | New helpers return the selected row's 8 frames and copy crop-size/Y plus output-scale/Y while preserving source/output X; full suite 7 files / 23 tests |
 | Production build and headed Chrome row-control check | Verify the new workflow compiles and renders | PASS | Vite build passed; Chrome showed「同一橫排一起對齊」and the dynamic「套用目前大小與上下到第 1 排」button |
+| Pages run `31810079759` | Publish row-level calibration | PASS | Commit `84ddc60`; deployment completed successfully |
+| Loader v0.3.0 CI/release | Verify new compact entry, pages, TXT, binding, and world-info selection handoff | PASS | Loader CI `31811764567`; release published with final ZIP SHA-256 `0c48e383118160b64728c2abc81f2406d7b85301d08bc611c6dffffdc2f17e90` |
 
 ## Unverified Areas
 

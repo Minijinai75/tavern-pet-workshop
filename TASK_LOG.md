@@ -104,3 +104,11 @@
 - Behavior: The selected frame becomes the row reference. One click copies source crop size, source Y, output scale, and output Y to all eight frames in that row while preserving every frame's source X and output X for walking motion and individual horizontal fine-tuning.
 - Verification: Focused suite 7/7; full website suite 7 files / 23 tests; production build and `git diff --check` passed. Headed Chrome reload confirmed the row control and selected-row label render on the real page.
 - Follow-up: Commit, push, wait for Pages, and verify the public control text.
+
+### 2026-08-14 22:55
+
+- Loader v0.3.0 release published after CI `31811764567` passed.
+- Release behavior: compact drawer shortcuts; standalone settings, letter diary, and story board; accumulated TXT export; per-character binding/switching; per-feature read-only selection of enabled always-on ST 1.18 world-info entries.
+- Workshop update: offline release button and README now target v0.3.0. The repository install URL is unchanged and remains the recommended path.
+- Row alignment publication: commit `84ddc60`; Pages run `31810079759` passed.
+- Follow-up: Commit/push this link update, wait for Pages, and verify the live control plus ZIP URL.
