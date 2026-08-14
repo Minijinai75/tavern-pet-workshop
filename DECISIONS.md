@@ -86,6 +86,16 @@
 
 ## Preserved Exceptions
 
+### 2026-08-14 - Component-first automatic atlas reconstruction
+
+- Status: confirmed by Mini's request to fix uneven horizontal spacing quickly.
+- Decision: analyze each 128px-high animation row as transparent connected components instead of trusting the old 128px column boundaries. Require eight separable main character groups, assign small detached pieces to the nearest group, then apply one shared scale and lower-body baseline across that row before writing exact 128×128 output cells with an 8px transparent margin.
+- Failure behavior: if any row cannot produce exactly eight groups, report the row numbers and leave the current image unchanged. The full-atlas manual crop editor remains the fallback.
+- Prompt contract: ask GPT for eight complete left-to-right character groups with transparent gaps and consistent row bands. Character completeness and separation take priority over pre-aligning every horizontal pixel to the final grid.
+- Manual feedback: draw and inspect an exact 128×128 preview on every control change. The 8px frame itself is the result indicator (red = still crossing, green = safe), accompanied by named top/right/bottom/left overflow. Ignore alpha `<= 16/255` so imperceptible antialias fringe does not keep a visually safe role red; saving still requires the explicit apply action.
+- Missing-source wording: if any body part is already absent at the outer edge of the whole PNG, the supported GPT workflow is to regenerate the whole Sprite Sheet, not one isolated frame.
+- Revisit when: generation models expose reliable sprite/object masks or a direct image API can guarantee the atlas contract.
+
 ### 2026-08-14 - Browser-local 96-frame calibration
 
 - Status: confirmed by Mini.

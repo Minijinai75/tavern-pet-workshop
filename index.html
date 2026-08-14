@@ -147,15 +147,25 @@
                     <h3 id="calibrator-title">96 格安全檢查</h3>
                     <p id="calibrator-summary">正在檢查每一格的透明邊界…</p>
                   </div>
-                  <button class="copy-button" id="fit-all-frames" type="button">問題格全部先展開</button>
+                  <div class="calibrator-heading-actions">
+                    <button class="download-button" id="auto-align-rows" type="button">一鍵自動辨識並對齊 12 排</button>
+                    <button class="copy-button" id="fit-all-frames" type="button">問題格全部先展開</button>
+                  </div>
+                </div>
+                <div class="auto-alignment-report" id="auto-alignment-report" data-kind="neutral" aria-live="polite">
+                  <strong>建議先按一鍵自動辨識</strong>
+                  <span>網站會找出每排 8 個完整角色，不再依賴舊的左右格線；只有辨識失敗的排才需要手動修正。</span>
                 </div>
                 <div class="frame-grid" id="frame-grid" aria-label="96 格 Sprite Sheet 檢查結果"></div>
                 <div class="frame-editor">
                   <div>
                     <strong id="selected-frame-label">第 1 格</strong>
-                    <p>這裡會回到整張原圖取景，不再鎖死在舊的 128×128 格內。直接拖曳預覽可把格外的頭髮、手腳拉回來；綠色內框是 8px 安全範圍。</p>
+                    <p>這裡會回到整張原圖取景，不再鎖死在舊的 128×128 格內。直接拖曳預覽可把格外的頭髮、手腳拉回來；內框會即時變色：紅色代表仍超線，綠色代表已進入 8px 安全區。</p>
                   </div>
-                  <canvas id="frame-editor-canvas" width="256" height="256" aria-label="目前影格裁切預覽"></canvas>
+                  <div class="frame-editor-preview">
+                    <canvas id="frame-editor-canvas" width="256" height="256" aria-label="目前影格裁切預覽"></canvas>
+                    <p class="frame-live-status" id="frame-live-status" data-kind="neutral" role="status" aria-live="polite">移動或縮放角色時，這裡會即時顯示還有哪一側超出安全區。</p>
+                  </div>
                   <div class="frame-editor-controls">
                     <strong>第一步：回原圖重新取景</strong>
                     <label><span>取景範圍（越大，抓回格外內容越多）</span><input id="frame-crop-size" type="range" min="128" max="224" value="128" /></label>
@@ -176,7 +186,7 @@
                     <p>先把目前這格的大小與上下調好，再套用到同排 8 格。會同步取景範圍、原圖上下、角色大小與格內上下；左右位置保留逐格調整。</p>
                     <button class="copy-button" id="apply-current-row" type="button">套用目前大小與上下到第 1 排</button>
                   </div>
-                  <p class="calibrator-limit">如果頭髮或手腳在整張 PNG 的最外緣就已經消失，網站無法補回不存在的像素；那一格仍需要回 GPT 重生。</p>
+                  <p class="calibrator-limit">如果頭髮或手腳在整張 PNG 的最外緣就已經消失，網站無法補回不存在的像素；整張圖需要回 GPT 重生。</p>
                 </div>
               </section>
             </fieldset>
@@ -273,7 +283,7 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12h8M12 8l4 4-4 4M5 5h14v14H5z" /></svg>
               開啟 Loader Repo
             </a>
-            <a class="loader-download loader-download-secondary" href="https://github.com/Minijinai75/resident-loader/releases/download/v0.3.0/resident-loader-v0.3.0.zip">
+            <a class="loader-download loader-download-secondary" href="https://github.com/Minijinai75/resident-loader/releases/download/v0.3.1/resident-loader-v0.3.1.zip">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
               離線 ZIP 備用
             </a>

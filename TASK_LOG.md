@@ -112,3 +112,23 @@
 - Workshop update: offline release button and README now target v0.3.0. The repository install URL is unchanged and remains the recommended path.
 - Row alignment publication: commit `84ddc60`; Pages run `31810079759` passed.
 - Follow-up: Commit/push this link update, wait for Pages, and verify the live control plus ZIP URL.
+
+### 2026-08-14 23:52
+
+- Objective: Fix GPT sprite sheets whose eight characters are aligned by row but have uneven horizontal spacing, so fixed 128px slices cut bodies even after row-level manual adjustment.
+- Root cause: the calibrator still treated the original 8×12 grid as the source of truth. Moving or scaling a crop could sample outside one old cell, but the user still had to find every horizontal source window manually.
+- RED/GREEN: Added a synthetic 12-row sheet with uneven X positions and detached parts. Detection/recomposition tests failed before implementation, then passed with shared row scales, 8px-safe output, exact ownership of detached pixels, and 96-frame reconstruction. Page and prompt contracts also failed first for the missing one-click control and separation-first wording.
+- Implementation: added connected-component row detection, nearest-character grouping for small detached parts, per-row shared scale/baseline planning, exact Canvas recomposition, an all-or-nothing UI action with failed-row reporting, and a corrected source baseline for later manual edits.
+- Prompt update: asks GPT to keep each row inside its own 128px vertical band, output eight complete left-to-right character groups, leave at least 12px transparent separation where possible, and prefer completeness/separation over forcing final horizontal pixel crops.
+- Verification: full suite passed 8 files / 26 tests; production build passed. Headed Chrome with `jiangnan-spritesheet-source-8x12-gridfix-260813.png` changed 96 unsafe cells to 0. Mobile Chrome at 390×844 kept a 390px document width, a 298px action/report panel, a 50.2px button, and 0 unsafe cells.
+- Loader handoff: v0.3.1 release/CI/public ZIP passed; the website fallback now points to that release.
+- Next: commit/push, wait for Pages, and verify the public button, prompt wording, and v0.3.1 URL.
+
+### 2026-08-14 23:59
+
+- Bug report: A role looked inside the editor frame, but the frame stayed red; the help text also called the same result frame「綠色內框」while it was visibly red.
+- Root cause: drag and slider input only redrew the source crop. The border color still read `currentInspections`, which updates only after「套用本格校正」rebuilt the whole atlas, so the preview displayed stale safety state.
+- RED/GREEN: Added contracts for single-frame live inspection, exact overflowing sides, ignoring alpha `<= 16`, the live-status element, and whole-sheet regeneration wording. Both focused suites failed before implementation and passed afterward.
+- Fix: the editor now renders the exact 128×128 candidate to an offscreen canvas on every change, inspects that candidate immediately, turns the 8px frame red or green, and reports top/right/bottom/left overflow in text. Applying remains explicit so a slider drag does not rewrite the atlas repeatedly.
+- Copy correction: if source pixels are already missing at the outside edge, the page now says the entire Sprite Sheet must be regenerated with GPT.
+- Browser proof: with the real Jiangnan source at 390×844, the selected frame first reported「右側、下方」; changing scale to 50 immediately changed the live state to green before Apply. The full one-click action still reconstructed 12 rows / 96 frames with 0 unsafe cells and no horizontal overflow.

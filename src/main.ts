@@ -8,11 +8,16 @@ import {
   canvasToPngFile,
   copyRowAlignment,
   composeAdjustedSpriteSheet,
+  composeAutomaticallyAlignedSpriteSheet,
+  detectAutomaticSpriteAlignment,
   fitBoundsIntoSafeArea,
+  inspectFramePixels,
   sourceRectForFrame,
   rowFrameIndexes,
+  unsafeFrameEdges,
   type FrameAdjustment,
   type FrameInspection,
+  type PixelBuffer,
 } from './sprite-calibrator';
 import {
   copyResidentLoaderRepositoryUrl,
@@ -56,6 +61,7 @@ const calibratorSummary = document.querySelector<HTMLParagraphElement>('#calibra
 const frameGrid = document.querySelector<HTMLDivElement>('#frame-grid')!;
 const selectedFrameLabel = document.querySelector<HTMLElement>('#selected-frame-label')!;
 const frameEditorCanvas = document.querySelector<HTMLCanvasElement>('#frame-editor-canvas')!;
+const frameLiveStatus = document.querySelector<HTMLParagraphElement>('#frame-live-status')!;
 const frameScale = document.querySelector<HTMLInputElement>('#frame-scale')!;
 const frameOffsetX = document.querySelector<HTMLInputElement>('#frame-offset-x')!;
 const frameOffsetY = document.querySelector<HTMLInputElement>('#frame-offset-y')!;
@@ -67,14 +73,20 @@ const fitCurrentFrame = document.querySelector<HTMLButtonElement>('#fit-current-
 const applyCurrentFrame = document.querySelector<HTMLButtonElement>('#apply-current-frame')!;
 const applyCurrentRow = document.querySelector<HTMLButtonElement>('#apply-current-row')!;
 const fitAllFrames = document.querySelector<HTMLButtonElement>('#fit-all-frames')!;
+const autoAlignRows = document.querySelector<HTMLButtonElement>('#auto-align-rows')!;
+const autoAlignmentReport = document.querySelector<HTMLElement>('#auto-alignment-report')!;
 
 let activePreviewUrl: string | undefined;
 let activeSpriteFile: File | undefined;
-let sourceImage: HTMLImageElement | undefined;
+let sourceImage: CanvasImageSource | undefined;
+let sourcePixels: PixelBuffer | undefined;
 let sourceInspections: FrameInspection[] = [];
 let currentInspections: FrameInspection[] = [];
 let selectedFrame = 0;
 const frameAdjustments = new Map<number, FrameAdjustment>();
+const framePreviewCanvas = document.createElement('canvas');
+framePreviewCanvas.width = 128;
+framePreviewCanvas.height = 128;
 
 const mobileLayoutQuery = window.matchMedia('(max-width: 720px)');
 
@@ -175,19 +187,19 @@ function setAdjustmentControls(adjustment: FrameAdjustment): void {
 function drawFrameEditor(): void {
   if (!sourceImage) return;
   const context = frameEditorCanvas.getContext('2d');
-  if (!context) return;
+  const previewContext = framePreviewCanvas.getContext('2d');
+  if (!context || !previewContext) return;
   const adjustment = controlsAdjustment();
   const sourceRect = sourceRectForFrame(selectedFrame, adjustment);
-  context.setTransform(1, 0, 0, 1, 0, 0);
-  context.clearRect(0, 0, 256, 256);
-  context.save();
-  context.scale(2, 2);
-  context.beginPath();
-  context.rect(0, 0, 128, 128);
-  context.clip();
-  context.translate(64 + adjustment.offsetX, 64 + adjustment.offsetY);
-  context.scale(adjustment.scale, adjustment.scale);
-  context.drawImage(
+  previewContext.setTransform(1, 0, 0, 1, 0, 0);
+  previewContext.clearRect(0, 0, 128, 128);
+  previewContext.save();
+  previewContext.beginPath();
+  previewContext.rect(0, 0, 128, 128);
+  previewContext.clip();
+  previewContext.translate(64 + adjustment.offsetX, 64 + adjustment.offsetY);
+  previewContext.scale(adjustment.scale, adjustment.scale);
+  previewContext.drawImage(
     sourceImage,
     sourceRect.x,
     sourceRect.y,
@@ -198,10 +210,29 @@ function drawFrameEditor(): void {
     128,
     128,
   );
-  context.restore();
+  previewContext.restore();
+
+  const pixels = previewContext.getImageData(0, 0, 128, 128);
+  const liveInspection = inspectFramePixels({ data: pixels.data, width: 128, height: 128 });
+  if (liveInspection.empty) {
+    frameLiveStatus.dataset.kind = 'empty';
+    frameLiveStatus.textContent = '目前取景沒有偵測到角色；請移回角色位置或放大取景範圍。';
+  } else if (liveInspection.unsafe) {
+    const labels = { top: '上方', right: '右側', bottom: '下方', left: '左側' } as const;
+    const edges = unsafeFrameEdges(liveInspection.bounds).map((edge) => labels[edge]);
+    frameLiveStatus.dataset.kind = 'unsafe';
+    frameLiveStatus.textContent = `仍超出 8px 安全區：${edges.join('、')}。請繼續移動或縮小角色。`;
+  } else {
+    frameLiveStatus.dataset.kind = 'safe';
+    frameLiveStatus.textContent = '已進入 8px 安全區。按「套用本格校正」保存這次調整。';
+  }
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.clearRect(0, 0, 256, 256);
+  context.drawImage(framePreviewCanvas, 0, 0, 256, 256);
   context.save();
   context.scale(2, 2);
-  context.strokeStyle = currentInspections[selectedFrame]?.unsafe ? '#dc2626' : '#16a34a';
+  context.strokeStyle = liveInspection.unsafe ? '#dc2626' : '#16a34a';
   context.lineWidth = 1.5;
   context.strokeRect(8, 8, 112, 112);
   context.restore();
@@ -288,6 +319,7 @@ avatarFile.addEventListener('change', async () => {
   }
   activeSpriteFile = undefined;
   sourceImage = undefined;
+  sourcePixels = undefined;
   sourceInspections = [];
   currentInspections = [];
   frameAdjustments.clear();
@@ -350,7 +382,9 @@ avatarFile.addEventListener('change', async () => {
     return;
   }
   analysisContext.drawImage(source, 0, 0);
-  sourceInspections = analyzeSpriteFrames(analysisContext.getImageData(0, 0, 1024, 1536));
+  const sourceImageData = analysisContext.getImageData(0, 0, 1024, 1536);
+  sourcePixels = { data: sourceImageData.data, width: 1024, height: 1536 };
+  sourceInspections = analyzeSpriteFrames(sourcePixels);
   currentInspections = sourceInspections;
   activePreviewUrl = sourceUrl;
   showSpritePreview(activePreviewUrl);
@@ -365,6 +399,57 @@ avatarFile.addEventListener('change', async () => {
       : '圖集尺寸與 96 格安全邊界都正確。',
     unsafeCount ? 'neutral' : 'success',
   );
+});
+
+autoAlignRows.addEventListener('click', async () => {
+  if (!sourcePixels || !activeSpriteFile) return;
+  autoAlignRows.disabled = true;
+  autoAlignmentReport.dataset.kind = 'neutral';
+  autoAlignmentReport.innerHTML = '<strong>正在辨識 12 排角色…</strong><span>這一步只在你的瀏覽器內處理圖片。</span>';
+  try {
+    const layout = detectAutomaticSpriteAlignment(sourcePixels);
+    if (!layout.ok) {
+      const failedRows = layout.rows.filter((row) => row.error).map((row) => row.row + 1);
+      autoAlignmentReport.dataset.kind = 'error';
+      autoAlignmentReport.innerHTML = `<strong>第 ${failedRows.join('、')} 排無法安全自動拆分</strong><span>${layout.errors.join(' ')} 相鄰角色可能已黏在一起；請重生整張 Sprite Sheet，或使用下方手動工具。</span>`;
+      setStatus('自動辨識沒有修改圖片；辨識失敗的排已列出。', 'error');
+      return;
+    }
+
+    const canvas = composeAutomaticallyAlignedSpriteSheet(sourcePixels, layout);
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('瀏覽器無法檢查自動對齊後的圖片。');
+    const corrected = context.getImageData(0, 0, canvas.width, canvas.height);
+    const correctedPixels: PixelBuffer = {
+      data: corrected.data,
+      width: canvas.width,
+      height: canvas.height,
+    };
+    const correctedInspections = analyzeSpriteFrames(correctedPixels);
+    const unsafeCount = correctedInspections.filter((inspection) => inspection.unsafe).length;
+    if (unsafeCount > 0) {
+      throw new Error(`自動重組後仍有 ${unsafeCount} 格碰到安全線，已停止套用。`);
+    }
+
+    activeSpriteFile = await canvasToPngFile(canvas, activeSpriteFile.name);
+    sourceImage = canvas;
+    sourcePixels = correctedPixels;
+    sourceInspections = correctedInspections;
+    currentInspections = correctedInspections;
+    frameAdjustments.clear();
+    updatePreviewUrl(activeSpriteFile);
+    renderFrameGrid();
+    autoAlignmentReport.dataset.kind = 'success';
+    autoAlignmentReport.innerHTML = '<strong>12 排、96 格已自動辨識並重新對齊</strong><span>每排共用同一縮放比例與腳底基準，全部角色都在 8px 安全框內。下方仍可逐格微調。</span>';
+    setStatus('自動對齊完成；下載角色包時會使用這張重新組成的 PNG。', 'success');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : '自動對齊失敗，圖片沒有被修改。';
+    autoAlignmentReport.dataset.kind = 'error';
+    autoAlignmentReport.innerHTML = `<strong>自動對齊沒有套用</strong><span>${message}</span>`;
+    setStatus(message, 'error');
+  } finally {
+    autoAlignRows.disabled = false;
+  }
 });
 
 for (const input of [frameScale, frameOffsetX, frameOffsetY, frameCropSize, frameSourceOffsetX, frameSourceOffsetY]) {

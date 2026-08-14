@@ -3,10 +3,10 @@
 ## Snapshot
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
-- Active task: 讓同一橫排 8 格快速統一大小與上下基準
-- Current phase: 橫排校正已發布；網站離線 Loader 連結更新到 v0.3.0
-- Overall status: complete; waiting for public Pages verification
-- Last updated: 2026-08-14 22:55 Asia/Taipei
+- Active task: 自動辨識每排 8 個角色並重建不切人的 96 格圖集
+- Current phase: 元件優先自動對齊、即時紅綠安全框、GPT 圖片指令強化與 Loader v0.3.1 連結已完成本機驗證
+- Overall status: implementation complete; waiting for commit, Pages deployment, and public verification
+- Last updated: 2026-08-14 23:52 Asia/Taipei
 
 ## Current Goal
 
@@ -41,6 +41,10 @@
 - Workshop offline-download links now target Loader v0.2.2, whose extension entry uses SillyTavern's native collapsible drawer and loads settings on expansion.
 - 96 格校正器可把目前影格的取景範圍、原圖上下、輸出大小與格內上下套用到同一橫排 8 格，同時保留每格各自的左右取景與左右位置；此流程貼合 GPT 通常在橫排內對齊動畫的輸出特性。
 - Website offline fallback now targets【酒館桌寵】v0.3.0: compact extension entry, standalone settings/diary/board HTML views, TXT export, character-card switching, and read-only per-feature always-on world-info selection.
+- One-click automatic atlas reconstruction now finds eight separable character groups in each 128px-high row, assigns nearby detached props, applies one shared row scale and baseline, and writes all 96 roles back into exact safe cells.
+- The GPT image prompt now prioritizes complete, separated left-to-right character groups over forcing an early fixed horizontal crop; it requests transparent gaps so the workshop can rebuild exact 128×128 cells.
+- Manual frame preview now recomputes the exact 128×128 output on every drag/slider input, turns the 8px frame red/green immediately, and names the overflowing sides. Alpha at or below 16/255 is treated as imperceptible fringe rather than visible sprite content.
+- Website offline fallback now targets【酒館桌寵】v0.3.1, whose letters use a date-rail paper layout and whose conversation extras use four muted pastel message-card tones.
 
 ## Files Completed Or Meaningfully Updated
 
@@ -48,11 +52,11 @@
 
 ## Current Blockers
 
-- No publishing blocker. A real SillyTavern repo-install smoke remains.
+- No publishing blocker. Automatic detection intentionally stops without changing the image if a row cannot be separated into exactly eight character groups. A real SillyTavern repo-install smoke remains.
 
 ## Next Recommended Step
 
-- Verify the public v0.3.0 link, then run Mini's in-Tavern update smoke.
+- Publish the automatic alignment update, verify the public v0.3.1 link and prompt text, then run Mini's in-Tavern update smoke.
 
 ## Resume Here
 

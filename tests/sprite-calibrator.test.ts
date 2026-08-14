@@ -2,11 +2,49 @@ import { describe, expect, it } from 'vitest';
 import {
   analyzeSpriteFrames,
   copyRowAlignment,
+  detectAutomaticSpriteAlignment,
   fitBoundsIntoSafeArea,
   frameRect,
+  inspectFramePixels,
   rowFrameIndexes,
   sourceRectForFrame,
+  unsafeFrameEdges,
 } from '../src/sprite-calibrator';
+
+function paintAlphaRect(
+  data: Uint8ClampedArray,
+  width: number,
+  left: number,
+  top: number,
+  rectWidth: number,
+  rectHeight: number,
+): void {
+  for (let y = top; y < top + rectHeight; y += 1) {
+    for (let x = left; x < left + rectWidth; x += 1) {
+      const offset = (y * width + x) * 4;
+      data[offset] = 32;
+      data[offset + 1] = 48;
+      data[offset + 2] = 64;
+      data[offset + 3] = 255;
+    }
+  }
+}
+
+function unevenSpriteSheet(): { data: Uint8ClampedArray; width: number; height: number } {
+  const width = 1024;
+  const height = 1536;
+  const data = new Uint8ClampedArray(width * height * 4);
+  const lefts = [18, 143, 270, 393, 521, 648, 774, 907];
+  for (let row = 0; row < 12; row += 1) {
+    for (let column = 0; column < 8; column += 1) {
+      const left = lefts[column];
+      const top = row * 128 + 20;
+      paintAlphaRect(data, width, left, top, 86, 94);
+      paintAlphaRect(data, width, left + 89, top + 28, 5, 5);
+    }
+  }
+  return { data, width, height };
+}
 
 describe('sprite frame calibration', () => {
   it('maps all 96 frames to exact 128x128 source rectangles', () => {
@@ -26,6 +64,22 @@ describe('sprite frame calibration', () => {
     expect(inspections).toHaveLength(96);
     expect(inspections[0]).toMatchObject({ frame: 0, unsafe: true });
     expect(inspections[1]).toMatchObject({ frame: 1, unsafe: false });
+  });
+
+  it('reports the exact live overflow edge and ignores imperceptible alpha fringe', () => {
+    const width = 128;
+    const height = 128;
+    const data = new Uint8ClampedArray(width * height * 4);
+    paintAlphaRect(data, width, 12, 10, 100, 108);
+    data[(64 * width + 2) * 4 + 3] = 8;
+
+    const safe = inspectFramePixels({ data, width, height });
+    expect(safe.unsafe).toBe(false);
+
+    data[(2 * width + 64) * 4 + 3] = 255;
+    const overflowing = inspectFramePixels({ data, width, height });
+    expect(overflowing.unsafe).toBe(true);
+    expect(unsafeFrameEdges(overflowing.bounds)).toEqual(['top']);
   });
 
   it('calculates a centered scale and translation that fits visible pixels in the safe area', () => {
@@ -84,5 +138,26 @@ describe('sprite frame calibration', () => {
       sourceOffsetX: -13,
       sourceOffsetY: -18,
     });
+  });
+
+  it('detects eight unevenly spaced sprites per row without trusting the old 128px columns', () => {
+    const pixels = unevenSpriteSheet();
+    const layout = detectAutomaticSpriteAlignment(pixels);
+
+    expect(layout.ok).toBe(true);
+    expect(layout.rows).toHaveLength(12);
+    expect(layout.rows.every((row) => row.frames.length === 8)).toBe(true);
+    for (const row of layout.rows) {
+      expect(new Set(row.frames.map((frame) => frame.scale)).size).toBe(1);
+      for (const frame of row.frames) {
+        expect(frame.outputLeft).toBeGreaterThanOrEqual(8);
+        expect(frame.outputTop).toBeGreaterThanOrEqual(8);
+        expect(frame.outputLeft + frame.outputWidth).toBeLessThanOrEqual(120);
+        expect(frame.outputTop + frame.outputHeight).toBeLessThanOrEqual(120);
+      }
+    }
+
+    const detachedPixel = 48 * pixels.width + 107;
+    expect(layout.pixelOwners[detachedPixel]).toBe(1);
   });
 });

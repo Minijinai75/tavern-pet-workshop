@@ -56,6 +56,14 @@
 | Production build and headed Chrome row-control check | Verify the new workflow compiles and renders | PASS | Vite build passed; Chrome showed「同一橫排一起對齊」and the dynamic「套用目前大小與上下到第 1 排」button |
 | Pages run `31810079759` | Publish row-level calibration | PASS | Commit `84ddc60`; deployment completed successfully |
 | Loader v0.3.0 CI/release | Verify new compact entry, pages, TXT, binding, and world-info selection handoff | PASS | Loader CI `31811764567`; release published with final ZIP SHA-256 `0c48e383118160b64728c2abc81f2406d7b85301d08bc611c6dffffdc2f17e90` |
+| Automatic row-detection TDD | Detect uneven X spacing without trusting old 128px columns | PASS | Synthetic 12-row atlas detected 8 roles per row, preserved detached props, used one scale per row, and reconstructed all content inside the 8px margin |
+| Full workshop suite after automatic alignment | Verify prompt, page control, calibrator, and prior behavior | PASS | 8 files / 26 tests |
+| Production build after automatic alignment | Type-check and bundle the new workflow | PASS | Vite build completed successfully |
+| Headed Chrome with Jiangnan source atlas | Verify the real uneven-spacing case | PASS | One click reported 12 rows / 96 cells and changed unsafe count 96 → 0 |
+| Chrome mobile QA at 390×844 | Verify the new action/report do not break phone layout | PASS | `scrollWidth=390`, button 298×50.2px, report 298px wide, and unsafe count remained 0 |
+| Loader v0.3.1 CI/release/public artifact | Verify redesigned letter/story reading-page handoff | PASS | CI `31816357745`; public manifest v0.3.1; ZIP 59,435 bytes and SHA-256 `e1c6a804df98e6ed1d043067595d92ebb7fecff3af3d182a6c3304ec3cce4df3` |
+| Live frame-safety RED/GREEN tests | Prevent stale red borders after a visual adjustment | PASS | Exact 128×128 inspection reports overflow edges, ignores alpha `<=16`, exposes live status, and uses whole-sheet regeneration wording |
+| Chrome live editor check at 390×844 | Verify the border/status changes before Apply | PASS | Real source changed live state from unsafe「右側、下方」to safe immediately after scale input; document had no horizontal overflow |
 
 ## Unverified Areas
 
