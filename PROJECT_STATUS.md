@@ -3,10 +3,10 @@
 ## Snapshot
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
-- Active task: 完成第一版網站 QA 並發布 GitHub Pages
-- Current phase: pre-deployment verification
-- Overall status: in progress
-- Last updated: 2026-08-14 17:51 Asia/Taipei
+- Active task: 網站 MVP 已發布，準備進入共用 Resident Loader
+- Current phase: website v0.1 delivered
+- Overall status: complete for website v0.1
+- Last updated: 2026-08-14 17:56 Asia/Taipei
 
 ## Current Goal
 
@@ -24,6 +24,7 @@
 - Exact `1024×1536`, `8×12`, `128×128` atlas validation implemented.
 - Loader v1 requirements confirmed and recorded: existing SillyTavern API/model selection, per-character prompt overrides, size/position/opacity, separate animation and movement speeds.
 - Unit suite: 12 tests passing. Production build passes.
+- Public GitHub Pages site deployed and verified at `https://minijinai75.github.io/tavern-pet-workshop/`.
 
 ## Files Completed Or Meaningfully Updated
 
@@ -36,7 +37,7 @@
 
 ## Next Recommended Step
 
-- Finish real-browser download verification, then commit, push, enable Pages, and verify the public URL.
+- Distill the existing Jinghe Resident API/model selection and runtime integration into an evidence-backed Loader implementation contract.
 
 ## Resume Here
 
@@ -45,4 +46,4 @@ Start by:
 1. Reading `DECISIONS.md`.
 2. Checking the latest `TASK_LOG.md` entry.
 3. Working on the "Next Recommended Step" above.
-4. After the website is live, distill the existing Jinghe Resident API/model integration and begin the shared Loader.
+4. Begin the shared Loader from the recorded v1 contract; do not add a new API-key form.

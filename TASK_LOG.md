@@ -20,3 +20,12 @@
 - Investigation: Headless Chrome download events receive the full archive byte count but end as canceled. The same failure was reproduced with an unrelated minimal 1 MB Blob and no URL revocation, isolating it to this Chrome automation environment rather than the workshop. The app now retains generated object URLs for 60 seconds defensively.
 - Follow-up needed: Commit/push, enable Pages, verify public URL, then start the shared Resident Loader distillation.
 - Handoff note: Loader v1 promises are contractual; do not replace existing SillyTavern API selection with a new API-key form.
+
+### 2026-08-14 17:56
+
+- Objective: Publish website v0.1 and verify the public deployment.
+- What changed: Renamed the default branch to `main`, committed website v0.1 as `53caadd`, pushed to GitHub, enabled Pages workflow deployment, and verified the public site.
+- Verification run: GitHub Actions run `31790068216` passed tests, build, artifact upload, and Pages deployment. Public URL returned HTTP 200. A live mobile Puppeteer check confirmed prompt copy, 8×12/row-12 content, no console errors, and no horizontal overflow.
+- Public site: `https://minijinai75.github.io/tavern-pet-workshop/`
+- Repository: `https://github.com/Minijinai75/tavern-pet-workshop`
+- Follow-up needed: Commit this final continuity update, then begin the shared Resident Loader distillation from the existing Jinghe Resident script.

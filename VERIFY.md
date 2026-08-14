@@ -20,10 +20,12 @@
 | Puppeteer clipboard/upload/preview flow | Exercise main browser workflow | PASS | One-click status updated; prompt contains `8欄×12列` and `第12排`; valid source PNG accepted; preview visible; no console errors |
 | Puppeteer generated archive inspection + unit ZIP inspection | Verify export is built locally | PASS | UI reached success; builder tests confirm only manifest, metadata, and PNG are included |
 | Headless Chrome native download control | Distinguish app bug from QA environment | ENV LIMITATION | Chrome received the complete archive byte count but reported cancellation. A separate 1 MB minimal Blob download with no URL revocation also canceled, so this is not specific to the workshop code. Object URLs are retained for 60 seconds as a defensive measure. |
+| GitHub Actions run `31790068216` | CI test, build, and Pages deploy | PASS | Build and deploy jobs completed successfully |
+| `Invoke-WebRequest https://minijinai75.github.io/tavern-pet-workshop/` | Confirm public availability | PASS | HTTP 200; expected title and copy button present |
+| Puppeteer against public Pages URL | Confirm deployed JS/CSS and mobile behavior | PASS | One-click copy worked; generated prompt contains grid and row-12 contract; no console errors; no horizontal overflow at 390 px |
 
 ## Unverified Areas
 
-- GitHub Pages deployment.
 - A human click-through download in a normal headed browser after Pages deployment.
 
 ## Known Risks
@@ -34,4 +36,4 @@
 
 ## Recommended Next Verification
 
-- Deploy GitHub Pages, confirm the public URL returns the production site, then perform one normal-browser download click if a human browser session is available.
+- Perform one normal-browser download click if a human browser session is available; begin Loader reference distillation.
