@@ -57,6 +57,25 @@ export function sourceRectForFrame(
   };
 }
 
+export function rowFrameIndexes(frame: number): number[] {
+  const safe = Math.max(0, Math.min(SPRITE_FRAME_COUNT - 1, Math.floor(frame)));
+  const start = Math.floor(safe / SPRITE_COLUMNS) * SPRITE_COLUMNS;
+  return Array.from({ length: SPRITE_COLUMNS }, (_, column) => start + column);
+}
+
+export function copyRowAlignment(
+  target: FrameAdjustment,
+  reference: FrameAdjustment,
+): FrameAdjustment {
+  return {
+    ...target,
+    scale: reference.scale,
+    offsetY: reference.offsetY,
+    cropSize: reference.cropSize ?? SPRITE_FRAME_SIZE,
+    sourceOffsetY: reference.sourceOffsetY ?? 0,
+  };
+}
+
 export function analyzeSpriteFrames(
   pixels: PixelBuffer,
   safeMargin = SPRITE_SAFE_MARGIN,

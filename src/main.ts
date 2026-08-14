@@ -6,9 +6,11 @@ import { applyLayoutMode, getLayoutLabel } from './layout-mode';
 import {
   analyzeSpriteFrames,
   canvasToPngFile,
+  copyRowAlignment,
   composeAdjustedSpriteSheet,
   fitBoundsIntoSafeArea,
   sourceRectForFrame,
+  rowFrameIndexes,
   type FrameAdjustment,
   type FrameInspection,
 } from './sprite-calibrator';
@@ -63,6 +65,7 @@ const frameSourceOffsetY = document.querySelector<HTMLInputElement>('#frame-sour
 const expandCurrentFrame = document.querySelector<HTMLButtonElement>('#expand-current-frame')!;
 const fitCurrentFrame = document.querySelector<HTMLButtonElement>('#fit-current-frame')!;
 const applyCurrentFrame = document.querySelector<HTMLButtonElement>('#apply-current-frame')!;
+const applyCurrentRow = document.querySelector<HTMLButtonElement>('#apply-current-row')!;
 const fitAllFrames = document.querySelector<HTMLButtonElement>('#fit-all-frames')!;
 
 let activePreviewUrl: string | undefined;
@@ -207,6 +210,7 @@ function drawFrameEditor(): void {
 function selectFrame(frame: number): void {
   selectedFrame = frame;
   selectedFrameLabel.textContent = `第 ${frame + 1} 格 · 第 ${Math.floor(frame / 8) + 1} 排第 ${(frame % 8) + 1} 格`;
+  applyCurrentRow.textContent = `套用目前大小與上下到第 ${Math.floor(frame / 8) + 1} 排`;
   setAdjustmentControls(frameAdjustments.get(frame) ?? { scale: 1, offsetX: 0, offsetY: 0 });
   for (const button of frameGrid.querySelectorAll<HTMLButtonElement>('[data-frame]')) {
     button.toggleAttribute('aria-current', Number(button.dataset.frame) === frame);
@@ -383,6 +387,22 @@ fitCurrentFrame.addEventListener('click', () => {
 applyCurrentFrame.addEventListener('click', () => {
   frameAdjustments.set(selectedFrame, controlsAdjustment());
   void rebuildCorrectedSprite();
+});
+
+applyCurrentRow.addEventListener('click', () => {
+  const reference = controlsAdjustment();
+  for (const frame of rowFrameIndexes(selectedFrame)) {
+    if (frame === selectedFrame) {
+      frameAdjustments.set(frame, reference);
+      continue;
+    }
+    const previous = frameAdjustments.get(frame) ?? { scale: 1, offsetX: 0, offsetY: 0 };
+    frameAdjustments.set(frame, copyRowAlignment(previous, reference));
+  }
+  const row = Math.floor(selectedFrame / 8) + 1;
+  void rebuildCorrectedSprite().then(() => {
+    setStatus(`第 ${row} 排 8 格已統一大小與上下基準；左右取景仍可逐格微調。`, 'success');
+  });
 });
 
 fitAllFrames.addEventListener('click', () => {

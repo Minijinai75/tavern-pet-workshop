@@ -96,3 +96,11 @@
 - Loader handoff: native SillyTavern collapsible drawer; expanding【酒館桌寵】loads settings inline with visible loading/failure feedback.
 - Published: Loader commit `e443091` / release v0.2.2; website commit `6560f8f`; Loader CI `31808691495` and Pages run `31808697194` passed.
 - Public check: website points to v0.2.2; release ZIP HTTP 200 and hash matched. Remaining: Mini's in-Tavern update smoke.
+
+### 2026-08-14 22:32
+
+- Objective: Use GPT's usual horizontal-row alignment to make 96-frame correction practical without adjusting all eight frames separately.
+- RED/GREEN: Added row-index and alignment-copy tests, observed both fail before implementation, then passed after adding the row helpers.
+- Behavior: The selected frame becomes the row reference. One click copies source crop size, source Y, output scale, and output Y to all eight frames in that row while preserving every frame's source X and output X for walking motion and individual horizontal fine-tuning.
+- Verification: Focused suite 7/7; full website suite 7 files / 23 tests; production build and `git diff --check` passed. Headed Chrome reload confirmed the row control and selected-row label render on the real page.
+- Follow-up: Commit, push, wait for Pages, and verify the public control text.

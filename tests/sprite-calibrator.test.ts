@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   analyzeSpriteFrames,
+  copyRowAlignment,
   fitBoundsIntoSafeArea,
   frameRect,
+  rowFrameIndexes,
   sourceRectForFrame,
 } from '../src/sprite-calibrator';
 
@@ -50,6 +52,37 @@ describe('sprite frame calibration', () => {
       y: 128,
       width: 128,
       height: 128,
+    });
+  });
+
+  it('returns the eight frames in the selected animation row', () => {
+    expect(rowFrameIndexes(19)).toEqual([16, 17, 18, 19, 20, 21, 22, 23]);
+  });
+
+  it('copies size and vertical alignment across a row without destroying per-frame horizontal crops', () => {
+    const target = {
+      scale: 0.8,
+      offsetX: 17,
+      offsetY: -4,
+      cropSize: 128,
+      sourceOffsetX: -13,
+      sourceOffsetY: 6,
+    };
+    const reference = {
+      scale: 0.92,
+      offsetX: 2,
+      offsetY: 11,
+      cropSize: 164,
+      sourceOffsetX: 9,
+      sourceOffsetY: -18,
+    };
+    expect(copyRowAlignment(target, reference)).toEqual({
+      scale: 0.92,
+      offsetX: 17,
+      offsetY: 11,
+      cropSize: 164,
+      sourceOffsetX: -13,
+      sourceOffsetY: -18,
     });
   });
 });

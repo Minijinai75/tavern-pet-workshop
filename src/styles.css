@@ -121,6 +121,10 @@ input[type="color"] { width: 2.2rem; height: 2.2rem; padding: .1rem; border: 0; 
 .frame-editor-controls input { width: 100%; accent-color: var(--pink-700); }
 .calibrator-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
 .calibrator-actions .download-button { min-height: 2.65rem; }
+.row-sync-box { grid-column: 1 / -1; display: grid; gap: .55rem; padding: .8rem; background: #f4f8ff; border: 1px solid #b8ccef; border-radius: .7rem; }
+.row-sync-box strong { color: #244b83; }
+.row-sync-box p { margin: 0; color: #50627c; font-size: .8rem; line-height: 1.55; }
+.row-sync-box .copy-button { justify-self: start; }
 .calibrator-limit { grid-column: 1 / -1; margin: 0; padding: .7rem .8rem; color: #8a3f18; background: #fff4e8; border: 1px solid #f4c89d; border-radius: .65rem; font-size: .78rem; line-height: 1.55; }
 .field-help { margin: -.35rem 0 1.2rem; padding: .8rem 1rem; color: #694256; background: #fff5f9; border-left: 3px solid var(--pink-300); border-radius: 0 .6rem .6rem 0; font-size: .84rem; line-height: 1.6; }
 details { border: 1px solid var(--line); border-radius: .85rem; overflow: hidden; }
@@ -217,7 +221,7 @@ footer p { font-size: .8rem; }footer a { font-size: .82rem; font-weight: 900; }
   .prompt-maker { padding: .85rem; }.prompt-maker-heading { align-items: flex-start; }.generated-prompt { min-height: 12rem; font-size: .88rem; }
   .copy-row { align-items: stretch; flex-direction: column; }.copy-button, .download-button { min-height: 3rem; justify-content: center; }.upload-zone { min-height: 140px; padding: 1rem; }
   .calibrator-heading { align-items: stretch; flex-direction: column; }.frame-grid { gap: 2px; padding: 4px; }.frame-cell { border-width: 1px; }.frame-cell span { display: none; }
-  .frame-editor { grid-template-columns: 1fr; padding: .8rem; }.frame-editor > div:first-child, .frame-editor .calibrator-actions { grid-column: auto; }#frame-editor-canvas { justify-self: center; }.calibrator-actions { flex-direction: column; }.calibrator-actions .copy-button, .calibrator-actions .download-button { width: 100%; }
+  .frame-editor { grid-template-columns: 1fr; padding: .8rem; }.frame-editor > div:first-child, .frame-editor .calibrator-actions, .row-sync-box { grid-column: auto; }#frame-editor-canvas { justify-self: center; }.calibrator-actions { flex-direction: column; }.calibrator-actions .copy-button, .calibrator-actions .download-button, .row-sync-box .copy-button { width: 100%; }
   summary { min-height: 3rem; display: flex; align-items: center; }.details-content { padding: .85rem; }
   .form-actions { align-items: stretch; flex-direction: column; padding: 1.1rem 1rem calc(1.1rem + env(safe-area-inset-bottom)); }.download-button { width: 100%; }
   .preview-panel { padding: 1rem; }.preview-chat { min-height: 400px; }.resident-image-wrap { height: 190px; }.resident-widget { width: min(220px, 76%); }

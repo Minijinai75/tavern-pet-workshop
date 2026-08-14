@@ -52,6 +52,8 @@
 | Cross-boundary crop RED/GREEN tests | Prove a frame can sample outside its old fixed cell | PASS | 2 new tests; suite now 7 files / 21 tests |
 | Headed Chrome/CDP with real `睿.png` | Verify full-atlas source recrop controls | PASS | 96 cells; crop 128→160; source offsets -18/+12; editor canvas hash changed `1856235845`→`2822728570` |
 | GitHub Pages run `31807400771` and public-page request | Publish cross-boundary crop fix | PASS | Commit `4c6c957`; live page HTTP 200 and contains full-atlas crop controls, recovery button, and edge limitation warning |
+| Row-alignment RED/GREEN tests | Keep each animation row visually stable without losing horizontal motion | PASS | New helpers return the selected row's 8 frames and copy crop-size/Y plus output-scale/Y while preserving source/output X; full suite 7 files / 23 tests |
+| Production build and headed Chrome row-control check | Verify the new workflow compiles and renders | PASS | Vite build passed; Chrome showed「同一橫排一起對齊」and the dynamic「套用目前大小與上下到第 1 排」button |
 
 ## Unverified Areas
 

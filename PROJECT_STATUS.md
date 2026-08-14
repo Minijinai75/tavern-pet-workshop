@@ -3,10 +3,10 @@
 ## Snapshot
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
-- Active task: 修正 96 格工具無法取回舊格線外像素
-- Current phase: 全圖重新取景工具已發布並通過公開驗證
-- Overall status: complete; waiting for Mini's hands-on crop check
-- Last updated: 2026-08-14 22:01 Asia/Taipei
+- Active task: 讓同一橫排 8 格快速統一大小與上下基準
+- Current phase: 橫排校正已實作並通過測試與瀏覽器 DOM 驗證，準備發布
+- Overall status: implementation complete; publishing
+- Last updated: 2026-08-14 22:32 Asia/Taipei
 
 ## Current Goal
 
@@ -39,6 +39,7 @@
 - Loader v0.2.1 uses the user-facing name【酒館桌寵】, lives in the extensions drawer, splits pet-click letter/story archives, and makes daily Prompt manual generation operational without enabling automatic calls.
 - Sprite correction now re-crops from the full original atlas: each frame can cross the old 128×128 boundary with an adjustable source window and source offsets before output placement.
 - Workshop offline-download links now target Loader v0.2.2, whose extension entry uses SillyTavern's native collapsible drawer and loads settings on expansion.
+- 96 格校正器可把目前影格的取景範圍、原圖上下、輸出大小與格內上下套用到同一橫排 8 格，同時保留每格各自的左右取景與左右位置；此流程貼合 GPT 通常在橫排內對齊動畫的輸出特性。
 
 ## Files Completed Or Meaningfully Updated
 
@@ -50,7 +51,7 @@
 
 ## Next Recommended Step
 
-- Run a real SillyTavern update smoke against the published v0.2.1 release.
+- 發布橫排校正；再把 Loader 擴充欄縮成入口，設定／來信／番外改為三個獨立 HTML 閱讀或操作頁。
 
 ## Resume Here
 
