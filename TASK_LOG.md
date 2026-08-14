@@ -54,3 +54,13 @@
 - Verification: 11 files / 45 tests passed; website build passed; Loader build/package passed; SillyTavern extension validator passed 10/10 with 0 warnings. Repeated clean package runs produced the same SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5`.
 - Follow-up needed: Commit/push, verify Pages exposes the ZIP, then perform a real headed SillyTavern install/profile/generation/reload smoke check.
 - Deployment: commit `f80bbd8` pushed; Pages run `31795059107` passed test, Loader package, site build, and deploy. Public page and ZIP returned HTTP 200; served ZIP was 50,502 bytes with SHA-256 `85d450783ad0b731a90838a9b8e8bfd8743f44a7a24a1cc00c50365c03e3e5b5`.
+
+### 2026-08-14 20:20
+
+- Objective: Split Resident Loader into a normal SillyTavern extension repository installable by pasting its GitHub URL.
+- RED/GREEN: Added the website copy-URL test and observed the expected missing-module failure; implemented `src/loader-install.ts` and the test passed. In the new repo, the topology test first failed for missing root manifest/dist, then passed after the independent build was created.
+- New repository: `Minijinai75/resident-loader`, commit `94ef5ef`, manifest v0.1.1, auto-update enabled, committed `dist/`, independent CI/build/package, six Loader test suites, and continuity files.
+- Release: Published v0.1.1 with an offline ZIP; reproducible SHA-256 `bdb512c679f356e3b3b528ff49dc1fe470e399f656918c5abf4e0458c237bfd5`.
+- Website split: Added repo URL copy UI and release fallback; moved Loader source/tests/build ownership out of the website repo; retained the old v0.1.0 ZIP and technical contract as historical rollback evidence.
+- Verification: New Loader 30 tests, build, topology test, package, and 10/10 extension validator passed. Website 16 tests and build passed.
+- Next: Commit/push website, wait for both Actions runs, verify public URLs, then run real SillyTavern smoke.

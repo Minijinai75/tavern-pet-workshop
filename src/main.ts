@@ -4,6 +4,10 @@ import { releaseDownloadUrlLater } from './download';
 import { createGptImagePrompt } from './image-prompt';
 import { applyLayoutMode, getLayoutLabel } from './layout-mode';
 import {
+  copyResidentLoaderRepositoryUrl,
+  RESIDENT_LOADER_REPOSITORY_URL,
+} from './loader-install';
+import {
   createDownloadName,
   validateSpriteDimensions,
   validateWorkshopInput,
@@ -32,6 +36,9 @@ const residentWidget = document.querySelector<HTMLElement>('#resident-widget')!;
 const status = document.querySelector<HTMLParagraphElement>('#form-status')!;
 const downloadButton = document.querySelector<HTMLButtonElement>('#download-button')!;
 const previewModeLabel = document.querySelector<HTMLElement>('#preview-mode-label')!;
+const loaderRepositoryUrl = document.querySelector<HTMLElement>('#loader-repository-url')!;
+const copyLoaderUrl = document.querySelector<HTMLButtonElement>('#copy-loader-url')!;
+const loaderCopyStatus = document.querySelector<HTMLParagraphElement>('#loader-copy-status')!;
 
 let activePreviewUrl: string | undefined;
 
@@ -44,6 +51,23 @@ function syncLayoutMode(): void {
 
 syncLayoutMode();
 mobileLayoutQuery.addEventListener('change', syncLayoutMode);
+
+loaderRepositoryUrl.textContent = RESIDENT_LOADER_REPOSITORY_URL;
+copyLoaderUrl.addEventListener('click', async () => {
+  try {
+    await copyResidentLoaderRepositoryUrl();
+    loaderCopyStatus.textContent = '安裝網址已複製，貼進酒館的「安裝擴充」就可以。';
+    loaderCopyStatus.dataset.kind = 'success';
+  } catch {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(loaderRepositoryUrl);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    loaderCopyStatus.textContent = '瀏覽器沒有開放剪貼簿，已替你選取網址，請按 Ctrl+C。';
+    loaderCopyStatus.dataset.kind = 'error';
+  }
+});
 
 function readDraft(): PackDraft {
   return {

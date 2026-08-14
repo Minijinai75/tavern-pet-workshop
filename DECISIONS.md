@@ -26,6 +26,15 @@
 - Scope: Repository and deployment topology.
 - Revisit when: Loader packaging requires a separate repository.
 
+### 2026-08-14 - Dedicated installable Loader repository
+
+- Status: confirmed by Mini
+- Decision: Move Loader source, tests, build, and release ownership to `Minijinai75/resident-loader`; keep `tavern-pet-workshop` focused on browser-local pack authoring.
+- Installation: Users paste `https://github.com/Minijinai75/resident-loader` into SillyTavern's extension installer. The website provides a one-click copy action and an offline release ZIP fallback.
+- Repository contract: Loader `manifest.json` and prebuilt `dist/` live at repository root; `auto_update` is enabled.
+- Recovery: Website commit `f80bbd8` preserves the pre-split source, and the independent Loader begins at commit `94ef5ef`.
+- Revisit when: SillyTavern changes third-party repository installation requirements.
+
 ### 2026-08-14 - GPT reference-image spritesheet workflow
 
 - Status: confirmed by Mini

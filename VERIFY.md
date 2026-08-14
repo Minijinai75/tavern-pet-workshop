@@ -34,6 +34,13 @@
 | `validate-extension.js resident-loader` | Validate SillyTavern manifest, JS/CSS and lifecycle exports | PASS | 10 passed / 0 warnings / 0 failures |
 | GitHub Actions run `31795059107` | CI test, reproducible Loader packaging, site build, and Pages deployment | PASS | Build and deploy jobs completed successfully |
 | Public page and Loader ZIP requests | Verify the deployed CTA and downloadable artifact | PASS | Page HTTP 200 with Loader link; ZIP HTTP 200, `application/x-zip-compressed`, 50,502 bytes, SHA-256 matched local package |
+| Website copy-install RED test | Prove repo URL copy behavior was absent before implementation | EXPECTED FAIL | Missing `src/loader-install.ts` |
+| `npm test` after repository split | Verify the focused workshop suite | PASS | 6 files / 16 tests passed |
+| `npm run build` after repository split | Verify the static website without Loader build ownership | PASS | Vite production build completed; page contains repo install and offline release entry points |
+| Independent Loader source SHA-256 comparison | Prove migration copied the complete core before cleanup | PASS | All 10 `src/loader/*.ts` files matched |
+| Independent Loader `npm test` / build / topology test | Verify migrated behavior and direct-install root | PASS | 6 files / 30 tests; root manifest and dist test passed |
+| Independent Loader package twice | Verify deterministic offline fallback | PASS | SHA-256 `bdb512c679f356e3b3b528ff49dc1fe470e399f656918c5abf4e0458c237bfd5` both times |
+| Independent Loader extension validator | Validate direct SillyTavern installation contract | PASS | 10 passed / 0 warnings / 0 failures |
 
 ## Unverified Areas
 
