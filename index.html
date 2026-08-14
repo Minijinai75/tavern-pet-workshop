@@ -141,6 +141,32 @@
                 <input id="avatar-file" name="avatar" type="file" accept="image/png" required />
               </label>
               <p class="file-name" id="file-name" aria-live="polite">還沒選擇圖片</p>
+              <section class="sprite-calibrator" id="sprite-calibrator" hidden aria-labelledby="calibrator-title">
+                <div class="calibrator-heading">
+                  <div>
+                    <h3 id="calibrator-title">96 格安全檢查</h3>
+                    <p id="calibrator-summary">正在檢查每一格的透明邊界…</p>
+                  </div>
+                  <button class="copy-button" id="fit-all-frames" type="button">問題格全部安全縮進</button>
+                </div>
+                <div class="frame-grid" id="frame-grid" aria-label="96 格 Sprite Sheet 檢查結果"></div>
+                <div class="frame-editor">
+                  <div>
+                    <strong id="selected-frame-label">第 1 格</strong>
+                    <p>紅框代表角色碰到格子邊界。可先按自動校正，再用滑桿微調。</p>
+                  </div>
+                  <canvas id="frame-editor-canvas" width="256" height="256" aria-label="目前影格裁切預覽"></canvas>
+                  <div class="frame-editor-controls">
+                    <label><span>角色大小</span><input id="frame-scale" type="range" min="50" max="140" value="100" /></label>
+                    <label><span>左右位置</span><input id="frame-offset-x" type="range" min="-48" max="48" value="0" /></label>
+                    <label><span>上下位置</span><input id="frame-offset-y" type="range" min="-48" max="48" value="0" /></label>
+                  </div>
+                  <div class="calibrator-actions">
+                    <button class="copy-button" id="fit-current-frame" type="button">本格自動放進安全區</button>
+                    <button class="download-button" id="apply-current-frame" type="button">套用本格校正</button>
+                  </div>
+                </div>
+              </section>
             </fieldset>
 
             <fieldset>
@@ -196,6 +222,7 @@
                       <path d="M35 51 30 27l21 15c7-3 13-3 20 0l21-15-6 25c9 9 12 24 6 36-7 14-21 20-36 18-18-2-30-16-29-33 0-9 3-16 8-22Z" />
                       <path d="M47 70h.01M73 70h.01M52 82c5 3 10 3 15 0" />
                     </svg>
+                    <p class="preview-empty-message" id="preview-empty-message" hidden>正在讀取你選擇的 PNG…</p>
                   </div>
                   <div class="speech-bubble">
                     <strong id="preview-name">我的桌寵</strong>
@@ -218,7 +245,7 @@
           <h2 id="how-title">下載後怎麼使用</h2>
         </div>
         <ol>
-          <li><span>1</span><strong>安裝 Resident Loader</strong><p>只需要安裝一次共用擴充。</p></li>
+          <li><span>1</span><strong>安裝【酒館桌寵】</strong><p>只需要安裝一次共用擴充。</p></li>
           <li><span>2</span><strong>匯入角色包</strong><p>在 Loader 設定中選擇剛下載的 ZIP。</p></li>
           <li><span>3</span><strong>綁定目前角色</strong><p>選擇角色卡，桌寵就會跟著它出現。</p></li>
         </ol>
@@ -234,7 +261,7 @@
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12h8M12 8l4 4-4 4M5 5h14v14H5z" /></svg>
               開啟 Loader Repo
             </a>
-            <a class="loader-download loader-download-secondary" href="https://github.com/Minijinai75/resident-loader/releases/download/v0.1.1/resident-loader-v0.1.1.zip">
+            <a class="loader-download loader-download-secondary" href="https://github.com/Minijinai75/resident-loader/releases/download/v0.2.0/resident-loader-v0.2.0.zip">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
               離線 ZIP 備用
             </a>

@@ -4,6 +4,15 @@ import { releaseDownloadUrlLater } from './download';
 import { createGptImagePrompt } from './image-prompt';
 import { applyLayoutMode, getLayoutLabel } from './layout-mode';
 import {
+  analyzeSpriteFrames,
+  canvasToPngFile,
+  composeAdjustedSpriteSheet,
+  fitBoundsIntoSafeArea,
+  frameRect,
+  type FrameAdjustment,
+  type FrameInspection,
+} from './sprite-calibrator';
+import {
   copyResidentLoaderRepositoryUrl,
   RESIDENT_LOADER_REPOSITORY_URL,
 } from './loader-install';
@@ -32,6 +41,7 @@ const previewName = document.querySelector<HTMLElement>('#preview-name')!;
 const previewDescription = document.querySelector<HTMLParagraphElement>('#preview-description')!;
 const previewImage = document.querySelector<HTMLDivElement>('#preview-image')!;
 const previewPlaceholder = document.querySelector<SVGElement>('#preview-placeholder')!;
+const previewEmptyMessage = document.querySelector<HTMLParagraphElement>('#preview-empty-message')!;
 const residentWidget = document.querySelector<HTMLElement>('#resident-widget')!;
 const status = document.querySelector<HTMLParagraphElement>('#form-status')!;
 const downloadButton = document.querySelector<HTMLButtonElement>('#download-button')!;
@@ -39,8 +49,25 @@ const previewModeLabel = document.querySelector<HTMLElement>('#preview-mode-labe
 const loaderRepositoryUrl = document.querySelector<HTMLElement>('#loader-repository-url')!;
 const copyLoaderUrl = document.querySelector<HTMLButtonElement>('#copy-loader-url')!;
 const loaderCopyStatus = document.querySelector<HTMLParagraphElement>('#loader-copy-status')!;
+const spriteCalibrator = document.querySelector<HTMLElement>('#sprite-calibrator')!;
+const calibratorSummary = document.querySelector<HTMLParagraphElement>('#calibrator-summary')!;
+const frameGrid = document.querySelector<HTMLDivElement>('#frame-grid')!;
+const selectedFrameLabel = document.querySelector<HTMLElement>('#selected-frame-label')!;
+const frameEditorCanvas = document.querySelector<HTMLCanvasElement>('#frame-editor-canvas')!;
+const frameScale = document.querySelector<HTMLInputElement>('#frame-scale')!;
+const frameOffsetX = document.querySelector<HTMLInputElement>('#frame-offset-x')!;
+const frameOffsetY = document.querySelector<HTMLInputElement>('#frame-offset-y')!;
+const fitCurrentFrame = document.querySelector<HTMLButtonElement>('#fit-current-frame')!;
+const applyCurrentFrame = document.querySelector<HTMLButtonElement>('#apply-current-frame')!;
+const fitAllFrames = document.querySelector<HTMLButtonElement>('#fit-all-frames')!;
 
 let activePreviewUrl: string | undefined;
+let activeSpriteFile: File | undefined;
+let sourceImage: HTMLImageElement | undefined;
+let sourceInspections: FrameInspection[] = [];
+let currentInspections: FrameInspection[] = [];
+let selectedFrame = 0;
+const frameAdjustments = new Map<number, FrameAdjustment>();
 
 const mobileLayoutQuery = window.matchMedia('(max-width: 720px)');
 
@@ -97,6 +124,123 @@ function setStatus(message: string, kind: 'neutral' | 'error' | 'success' = 'neu
   status.dataset.kind = kind;
 }
 
+function showNeutralPreview(message: string): void {
+  previewPlaceholder.toggleAttribute('hidden', true);
+  previewImage.hidden = true;
+  previewImage.style.removeProperty('background-image');
+  previewEmptyMessage.textContent = message;
+  previewEmptyMessage.hidden = false;
+}
+
+function showSpritePreview(url: string): void {
+  previewPlaceholder.toggleAttribute('hidden', true);
+  previewEmptyMessage.hidden = true;
+  previewImage.style.backgroundImage = `url("${url}")`;
+  previewImage.hidden = false;
+}
+
+function updatePreviewUrl(file: Blob): void {
+  if (activePreviewUrl) URL.revokeObjectURL(activePreviewUrl);
+  activePreviewUrl = URL.createObjectURL(file);
+  showSpritePreview(activePreviewUrl);
+}
+
+function controlsAdjustment(): FrameAdjustment {
+  return {
+    scale: Number(frameScale.value) / 100,
+    offsetX: Number(frameOffsetX.value),
+    offsetY: Number(frameOffsetY.value),
+  };
+}
+
+function setAdjustmentControls(adjustment: FrameAdjustment): void {
+  frameScale.value = String(Math.round(adjustment.scale * 100));
+  frameOffsetX.value = String(Math.round(adjustment.offsetX));
+  frameOffsetY.value = String(Math.round(adjustment.offsetY));
+}
+
+function drawFrameEditor(): void {
+  if (!sourceImage) return;
+  const context = frameEditorCanvas.getContext('2d');
+  if (!context) return;
+  const rect = frameRect(selectedFrame);
+  const adjustment = controlsAdjustment();
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.clearRect(0, 0, 256, 256);
+  context.save();
+  context.scale(2, 2);
+  context.beginPath();
+  context.rect(0, 0, 128, 128);
+  context.clip();
+  context.translate(64 + adjustment.offsetX, 64 + adjustment.offsetY);
+  context.scale(adjustment.scale, adjustment.scale);
+  context.drawImage(sourceImage, rect.x, rect.y, 128, 128, -64, -64, 128, 128);
+  context.restore();
+  context.save();
+  context.scale(2, 2);
+  context.strokeStyle = currentInspections[selectedFrame]?.unsafe ? '#dc2626' : '#16a34a';
+  context.lineWidth = 1.5;
+  context.strokeRect(8, 8, 112, 112);
+  context.restore();
+}
+
+function selectFrame(frame: number): void {
+  selectedFrame = frame;
+  selectedFrameLabel.textContent = `第 ${frame + 1} 格 · 第 ${Math.floor(frame / 8) + 1} 排第 ${(frame % 8) + 1} 格`;
+  setAdjustmentControls(frameAdjustments.get(frame) ?? { scale: 1, offsetX: 0, offsetY: 0 });
+  for (const button of frameGrid.querySelectorAll<HTMLButtonElement>('[data-frame]')) {
+    button.toggleAttribute('aria-current', Number(button.dataset.frame) === frame);
+  }
+  drawFrameEditor();
+}
+
+function renderFrameGrid(): void {
+  frameGrid.replaceChildren();
+  const unsafeCount = currentInspections.filter((item) => item.unsafe).length;
+  const emptyCount = currentInspections.filter((item) => item.empty).length;
+  calibratorSummary.textContent = unsafeCount === 0
+    ? '96 格都在 8px 安全範圍內，可以直接下載角色包。'
+    : `有 ${unsafeCount} 格需要確認${emptyCount ? `，其中 ${emptyCount} 格沒有偵測到角色` : ''}。紅色格子可逐格調整。`;
+  currentInspections.forEach((inspection) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `frame-cell${inspection.unsafe ? ' is-unsafe' : ' is-safe'}`;
+    button.dataset.frame = String(inspection.frame);
+    button.title = inspection.empty
+      ? `第 ${inspection.frame + 1} 格：沒有偵測到角色`
+      : inspection.unsafe
+        ? `第 ${inspection.frame + 1} 格：內容碰到安全邊界`
+        : `第 ${inspection.frame + 1} 格：安全`;
+    if (activePreviewUrl) button.style.backgroundImage = `url("${activePreviewUrl}")`;
+    button.style.backgroundPosition = `${((inspection.frame % 8) / 7) * 100}% ${((Math.floor(inspection.frame / 8)) / 11) * 100}%`;
+    const badge = document.createElement('span');
+    badge.textContent = String(inspection.frame + 1);
+    button.append(badge);
+    button.addEventListener('click', () => selectFrame(inspection.frame));
+    frameGrid.append(button);
+  });
+  selectFrame(selectedFrame);
+}
+
+async function rebuildCorrectedSprite(): Promise<void> {
+  if (!sourceImage || !activeSpriteFile) return;
+  applyCurrentFrame.disabled = true;
+  fitAllFrames.disabled = true;
+  try {
+    const canvas = composeAdjustedSpriteSheet(sourceImage, frameAdjustments);
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('瀏覽器無法檢查校正後圖片。');
+    currentInspections = analyzeSpriteFrames(context.getImageData(0, 0, canvas.width, canvas.height));
+    activeSpriteFile = await canvasToPngFile(canvas, activeSpriteFile.name);
+    updatePreviewUrl(activeSpriteFile);
+    renderFrameGrid();
+    setStatus('已在瀏覽器本機重新組成 1024×1536 PNG，下載時會使用校正後版本。', 'success');
+  } finally {
+    applyCurrentFrame.disabled = false;
+    fitAllFrames.disabled = false;
+  }
+}
+
 form.addEventListener('input', updatePreview);
 
 copyImagePrompt.addEventListener('click', async () => {
@@ -118,68 +262,140 @@ avatarFile.addEventListener('change', async () => {
     URL.revokeObjectURL(activePreviewUrl);
     activePreviewUrl = undefined;
   }
+  activeSpriteFile = undefined;
+  sourceImage = undefined;
+  sourceInspections = [];
+  currentInspections = [];
+  frameAdjustments.clear();
+  spriteCalibrator.hidden = true;
 
   if (!file) {
     fileName.textContent = '還沒選擇圖片';
     previewImage.hidden = true;
     previewImage.style.removeProperty('background-image');
+    previewEmptyMessage.hidden = true;
     previewPlaceholder.toggleAttribute('hidden', false);
     return;
   }
+
+  showNeutralPreview('正在讀取你選擇的 PNG…');
 
   const errors = validateWorkshopInput(readDraft(), file).filter((message) => message.includes('圖集'));
   if (errors.length > 0) {
-    avatarFile.value = '';
     fileName.textContent = errors[0];
     setStatus(errors[0], 'error');
-    previewImage.hidden = true;
-    previewImage.style.removeProperty('background-image');
-    previewPlaceholder.toggleAttribute('hidden', false);
+    showNeutralPreview('這張圖片無法使用，請依左側提示重新選擇。');
     return;
   }
 
-  activePreviewUrl = URL.createObjectURL(file);
+  const sourceUrl = URL.createObjectURL(file);
   const source = new Image();
   const dimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
     source.onload = () => resolve({ width: source.naturalWidth, height: source.naturalHeight });
     source.onerror = () => reject(new Error('無法讀取這張 PNG，請重新匯出後再試。'));
-    source.src = activePreviewUrl!;
+    source.src = sourceUrl;
   }).catch((error: Error) => {
     setStatus(error.message, 'error');
     return undefined;
   });
 
   if (!dimensions) {
-    avatarFile.value = '';
-    previewImage.hidden = true;
-    previewPlaceholder.toggleAttribute('hidden', false);
+    URL.revokeObjectURL(sourceUrl);
+    showNeutralPreview('無法讀取這張圖片，請重新選擇。');
     return;
   }
 
   const dimensionErrors = validateSpriteDimensions(dimensions.width, dimensions.height);
   if (dimensionErrors.length > 0) {
-    avatarFile.value = '';
     fileName.textContent = `${file.name} · ${dimensions.width}×${dimensions.height}`;
     setStatus(dimensionErrors[0], 'error');
-    URL.revokeObjectURL(activePreviewUrl);
-    activePreviewUrl = undefined;
-    previewImage.hidden = true;
-    previewImage.style.removeProperty('background-image');
-    previewPlaceholder.toggleAttribute('hidden', false);
+    URL.revokeObjectURL(sourceUrl);
+    showNeutralPreview('尺寸不符合 8×12 圖集，請重新選擇。');
     return;
   }
 
-  previewImage.style.backgroundImage = `url("${activePreviewUrl}")`;
-  previewImage.hidden = false;
-  previewPlaceholder.toggleAttribute('hidden', true);
+  sourceImage = source;
+  activeSpriteFile = file;
+  const analysisCanvas = document.createElement('canvas');
+  analysisCanvas.width = 1024;
+  analysisCanvas.height = 1536;
+  const analysisContext = analysisCanvas.getContext('2d');
+  if (!analysisContext) {
+    URL.revokeObjectURL(sourceUrl);
+    showNeutralPreview('瀏覽器無法建立圖片檢查畫布。');
+    return;
+  }
+  analysisContext.drawImage(source, 0, 0);
+  sourceInspections = analyzeSpriteFrames(analysisContext.getImageData(0, 0, 1024, 1536));
+  currentInspections = sourceInspections;
+  activePreviewUrl = sourceUrl;
+  showSpritePreview(activePreviewUrl);
+  spriteCalibrator.hidden = false;
+  selectedFrame = sourceInspections.find((item) => item.unsafe)?.frame ?? 0;
+  renderFrameGrid();
   fileName.textContent = `${file.name} · 1024×1536 · ${(file.size / 1024 / 1024).toFixed(2)} MB`;
-  setStatus('圖集尺寸正確，第一格已在本機預覽。', 'success');
+  const unsafeCount = sourceInspections.filter((item) => item.unsafe).length;
+  setStatus(
+    unsafeCount
+      ? `尺寸正確，但有 ${unsafeCount} 格碰到安全邊界，請在下方檢查或一鍵縮進。`
+      : '圖集尺寸與 96 格安全邊界都正確。',
+    unsafeCount ? 'neutral' : 'success',
+  );
 });
+
+for (const input of [frameScale, frameOffsetX, frameOffsetY]) {
+  input.addEventListener('input', drawFrameEditor);
+}
+
+fitCurrentFrame.addEventListener('click', () => {
+  const bounds = sourceInspections[selectedFrame]?.bounds;
+  if (!bounds) return setStatus('這一格沒有偵測到角色，請回 GPT 補做後再換圖。', 'error');
+  setAdjustmentControls(fitBoundsIntoSafeArea(bounds));
+  drawFrameEditor();
+});
+
+applyCurrentFrame.addEventListener('click', () => {
+  frameAdjustments.set(selectedFrame, controlsAdjustment());
+  void rebuildCorrectedSprite();
+});
+
+fitAllFrames.addEventListener('click', () => {
+  sourceInspections.forEach((inspection) => {
+    if (inspection.unsafe && inspection.bounds) {
+      frameAdjustments.set(inspection.frame, fitBoundsIntoSafeArea(inspection.bounds));
+    }
+  });
+  void rebuildCorrectedSprite();
+});
+
+let editorDrag: { x: number; y: number; offsetX: number; offsetY: number } | undefined;
+frameEditorCanvas.addEventListener('pointerdown', (event) => {
+  editorDrag = {
+    x: event.clientX,
+    y: event.clientY,
+    offsetX: Number(frameOffsetX.value),
+    offsetY: Number(frameOffsetY.value),
+  };
+  frameEditorCanvas.setPointerCapture?.(event.pointerId);
+});
+frameEditorCanvas.addEventListener('pointermove', (event) => {
+  if (!editorDrag) return;
+  frameOffsetX.value = String(Math.max(-48, Math.min(48, Math.round(editorDrag.offsetX + (event.clientX - editorDrag.x) / 2))));
+  frameOffsetY.value = String(Math.max(-48, Math.min(48, Math.round(editorDrag.offsetY + (event.clientY - editorDrag.y) / 2))));
+  drawFrameEditor();
+});
+const endEditorDrag = (event: PointerEvent): void => {
+  if (!editorDrag) return;
+  editorDrag = undefined;
+  frameEditorCanvas.releasePointerCapture?.(event.pointerId);
+};
+frameEditorCanvas.addEventListener('pointerup', endEditorDrag);
+frameEditorCanvas.addEventListener('pointercancel', endEditorDrag);
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const draft = readDraft();
-  const file = avatarFile.files?.[0];
+  const file = activeSpriteFile;
   const errors = validateWorkshopInput(draft, file);
 
   if (errors.length > 0 || !file) {

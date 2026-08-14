@@ -67,3 +67,12 @@
 - Published: website commit `2722166`; Pages run `31799989399` passed. The live page returned HTTP 200 and contains the repo URL, copy button, and v0.1.1 release link.
 - Public Loader verification: repository CI `31799793600` passed; release ZIP returned HTTP 200, 50,600 bytes, and the expected SHA-256.
 - Remaining: real headed SillyTavern install/generation/reload smoke only.
+
+### 2026-08-14 21:23
+
+- Objective: Add browser-local per-frame atlas correction and remove the pink mascot from uploaded-PNG preview; update the site for【酒館桌寵】v0.2.0.
+- RED: `sprite-calibrator.test.ts` failed because no frame analyzer existed.
+- Implementation: added exact 96-cell mapping, alpha safety scanning, frame selection, drag/scale controls, one-frame/all-problem auto-fit, Canvas PNG recomposition, corrected-file pack export, and explicit hidden-style protection for the mascot.
+- Browser QA with the real `睿.png`: 96 frames rendered; 96 unsafe frames detected before correction and 0 after one-click correction; mascot computed display `none`; no console errors or horizontal overflow at desktop and 390px mobile.
+- Verification: website 7 files / 19 tests passed; production build passed.
+- Remaining: commit/push, Pages deployment, public URL/release-link verification.

@@ -44,6 +44,9 @@
 | Independent Loader GitHub Actions run `31799793600` | Verify the published extension repository | PASS | Tests, build, committed-dist drift check, and package completed |
 | Workshop Pages run `31799989399` | Deploy the repository-install UI | PASS | Build and deploy jobs completed |
 | Public workshop and v0.1.1 release requests | Verify live user entry points and artifact integrity | PASS | Site HTTP 200 with repo URL/copy button/release link; ZIP HTTP 200, 50,600 bytes, SHA-256 matched |
+| `npm test` after 96-frame calibrator | Verify atlas analysis and existing workshop behavior | PASS | 7 files / 19 tests |
+| `npm run build` after calibrator UI | Type-check and bundle static Pages site | PASS | Vite production build completed |
+| Playwright/Chrome with real `睿.png` | Verify uploaded preview, 96-cell warnings, recomposition, and responsive layout | PASS | mascot `display:none`; 96 unsafe → 0 after auto-fit; zero console errors and zero horizontal overflow at 1440px/390px |
 
 ## Unverified Areas
 

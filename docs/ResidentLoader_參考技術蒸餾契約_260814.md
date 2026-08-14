@@ -1,8 +1,8 @@
 # Resident Loader 參考技術蒸餾契約
 
-> 狀態：v0.1.0 已依契約實作並通過自動驗證
+> 狀態：v0.2.0 已依 Mini 拍板流程實作並通過自動與瀏覽器驗證
 > 路由：hybrid
-> 更新時間：26-08-14 19:08（Asia/Taipei）
+> 更新時間：26-08-14 21:24（Asia/Taipei）
 > 目標：把景和 Resident 現有可驗證行為蒸餾成一個只安裝一次、可匯入多個資料包的 SillyTavern 共用 Loader。
 
 本輪邊界：Loader v1 只處理資料型角色包、桌寵動畫、酒館生成與本機歷史；不接手角色卡的 MVU 狀態交易，也不修改或開關世界書。未來若加入 MVU／世界書能力，必須另立 adapter、交易與回滾契約，不能藉本次匯入格式偷偷取得權限。
@@ -36,11 +36,16 @@
 | Prompt settings | embedded settings＋工坊 manifest | pack 預設、USER 覆寫、重設 | per-character settings | ADAPTER／CONFIG |
 | Sprite runtime | 工坊 8×12 atlas＋舊 shell | 顯示、動作、拖曳、尺寸、速度 | `sprite-resident.ts` | REIMPLEMENT |
 | Settings panel | embedded 1146–1193 | profile、桌寵尺寸等 | Loader UI | REIMPLEMENT；手機優先 |
+| Extension drawer entry | ST `#extensions_settings2`／擴充功能抽屜 | 顯示名稱、設定與顯示開關 | 【酒館桌寵】項目 | ADAPTER；找不到容器時友善降級 |
+| Pet quick menu | resident shell／feature renderer | 點角色後進入來信或番外 | 兩鍵 DOM_ONLY 快捷選單 | REIMPLEMENT；不得觸發生成或 SEND |
+| Sprite frame calibrator | 工坊輸入與 8×12 atlas 契約 | 逐格檢查、拖移縮放、重新組圖 | 工坊 browser Canvas | REIMPLEMENT；全程 browser-local |
 
 ## 3. 入口、事件與完整流程
 
 ```text
 安裝一次 Loader → ST 載入 manifest/index → APP_READY
+  → 在酒館「擴充功能」欄掛載【酒館桌寵】項目
+  → 項目提供「開啟設定／開啟桌寵／關閉桌寵」；不得另放浮動 Launcher
   → 打開 IndexedDB registry → 取得目前角色 stable key
   → 查 binding → 有綁定：讀 pack＋設定 → mount 桌寵
              └→ 未綁定：保持安靜，只在設定面板提示
@@ -50,8 +55,9 @@
   → 全部通過才單次 STATE_WRITE → registry 更新 → 預覽
   → 按「綁定目前角色」→ 寫 binding → mount
 
-點桌寵 → DOM_ONLY 開功能面板
-  → USER 明示按「生成書信／番外」
+點桌寵 → DOM_ONLY 開兩鍵快捷選單「來信紀錄／對話番外紀錄」
+  → 各自開獨立閱讀視圖；瀏覽紀錄時 GENERATE 仍為 0
+  → USER 明示按「生成一封新來信／生成一篇新番外」
   → 讀該角色 Prompt 覆寫＋最近 N 樓（0＝不帶）
   → 選 current API 或 profile id → GENERATE（不 SEND）
   → 將結果 STATE_WRITE 到本機歷史 → RENDER_ONLY 顯示在同一個 HTML 面板
@@ -81,6 +87,7 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 | 操作 | DOM_ONLY | SEND | GENERATE | STATE_WRITE | RENDER_ONLY | 失敗回復 |
 |---|---:|---:|---:|---:|---:|---|
 | 開／關桌寵與設定面板 | 是 | 否 | 否 | 否 | 是 | 不造新樓層、不呼叫模型 |
+| 點桌寵開快捷選單／切換來信與番外閱讀頁 | 是 | 否 | 否 | 否 | 是 | 瀏覽與切頁永遠不生成 |
 | 匯入 pack／抽換 PNG | 是 | 否 | 否 | 驗證全過才是 | 是 | 拒收整包，保留舊 revision |
 | 綁定／切換／解除角色 | 是 | 否 | 否 | 是 | 是 | 綁定失敗不改現況 |
 | 改 Prompt、尺寸、速度、樓數 | 是 | 否 | 否 | 是 | 是 | 驗證失敗保留舊值 |
@@ -106,6 +113,7 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 | Prompt resolver／recent floors | REIMPLEMENT | 舊程式樓數固定且 Prompt 閉包化 | 每次生成讀即時設定 |
 | 8×12 sprite renderer | REIMPLEMENT | 工坊 v1 atlas 與舊角色包資產契約不同 | CSS background-position／timer |
 | Loader settings UI | REIMPLEMENT | 公開產品須簡化且行動版可用 | accessible panel＋mobile layout |
+| 工坊逐格裁切校正 | REIMPLEMENT | 整張尺寸正確不代表每格角色未越界 | alpha 邊界掃描＋96 格編輯＋Canvas 重組 |
 
 ## 7. 移植映射表
 
@@ -155,6 +163,11 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 - [x] 匯入、預覽、綁定、設定與自動動畫皆不 SEND／不 GENERATE；只有 USER 明示生成書信／番外才 GENERATE。（依需求保守落地）
 - [x] 手機與桌面共用一個設定入口，手機偵測後改成觸控友善單欄面板。（Mini，26-08-14）
 - [x] 壞包／壞圖／升級失敗時保留舊資料，不做破壞性覆寫。（依母基地安全規則落地）
+- [x] 擴充項目顯示名稱固定為【酒館桌寵】；不再使用「Resident Loader｜共用桌寵」作為 UI 標題。（Mini，26-08-14 20:55）
+- [x] 移除浮動畫面 Launcher；改在酒館擴充功能欄顯示【酒館桌寵】項目，提供設定與桌寵開／關。（Mini，26-08-14 20:55）
+- [x] 點桌寵只開「來信紀錄／對話番外紀錄」兩鍵快捷選單；各自以 HTML 閱讀視圖呈現，按生成才呼叫模型且不新增聊天樓層。（Mini，26-08-14 20:55）
+- [x] 「指定 Profile」改名為「指定連線設定檔案」；匯入按鈕加強辨識，並提供不刪資料的解除角色綁定。（Mini，26-08-14 20:55）
+- [x] 工坊新增 96 格 browser-local 校正；上傳 PNG 後預覽不再顯示粉色小惡魔，錯誤時改用中性提示。（Mini，26-08-14 20:55）
 
 ## 10. 回歸與驗收計畫
 
@@ -175,6 +188,11 @@ onDisable → 移除 event listener、panel、pet、timer、Blob URL；不刪使
 | 歷史刪除 | 取消確認／確認刪除 | 取消時不動；確認後只刪指定 scope／record | unit＋人工 | transaction assertions |
 | 速度獨立 | 改動畫速度後再改移動速度 | frame rate 與 px/s 各自改變 | fake timer unit＋人工 | timing assertions |
 | 手機 UI | 390px 匯入、綁定、改 textarea/slider | 單欄、16px input、48px action、安全區可用 | browser QA | screenshot＋computed style |
+| 擴充欄入口 | APP_READY、`#extensions_settings2` 存在 | 顯示【酒館桌寵】與設定／開／關；無浮動 Launcher | jsdom＋ST 人工 | DOM assertions |
+| 桌寵快捷閱讀 | 點桌寵後依次開來信／番外 | 只開兩鍵選單與指定閱讀頁；GENERATE 0、SEND 0 | jsdom＋provider spy | call counts＋DOM assertions |
+| 解除綁定 | 已綁定角色按解除並確認 | sprite 卸載；pack、設定與歷史仍在 | repository unit＋ST 人工 | binding/history assertions |
+| 逐格安全邊界 | 上傳內容碰到格邊的 8×12 PNG | 問題格標示；可拖移縮放並重組精確 1024×1536 PNG | unit＋browser QA | alpha scan＋canvas dimensions |
+| PNG 預覽替換 | 選擇合法或不合法 PNG | 粉色小惡魔立即隱藏；合法圖顯示本人素材，錯誤顯示中性狀態 | jsdom＋browser QA | visibility assertions |
 | cleanup | 切聊天、停用、重啟多次 | 只有一組 listener／pet／timer；Blob URL 撤銷 | unit＋人工 | resource counters |
 | Build/package | `npm test && npm run build:loader` | 測試全綠；產出可安裝 ZIP | CI | artifact hash |
 

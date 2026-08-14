@@ -86,6 +86,14 @@
 
 ## Preserved Exceptions
 
+### 2026-08-14 - Browser-local 96-frame calibration
+
+- Status: confirmed by Mini.
+- Decision: after a 1024×1536 PNG is selected, inspect all 96 cells for alpha content inside the 8px margin; let users select a frame, drag/scale it, auto-fit one or all unsafe frames, and rebuild the exact atlas with browser Canvas.
+- Privacy: no Python service, backend, account, or image upload is required.
+- Preview: selecting any PNG immediately hides the pink mascot; invalid images show neutral text instead.
+- Limitation: pixels already missing from the source cannot be reconstructed and must be regenerated/replaced.
+
 ### 2026-08-14 - No open-source license selected yet
 
 - Status: preserved on purpose
