@@ -4,7 +4,7 @@
 
 - 工坊：<https://minijinai75.github.io/tavern-pet-workshop/>
 - Loader repo 安裝網址：<https://github.com/Minijinai75/resident-loader>
-- 【酒館桌寵】離線 ZIP：<https://github.com/Minijinai75/resident-loader/releases/download/v0.2.1/resident-loader-v0.2.1.zip>
+- 【酒館桌寵】離線 ZIP：<https://github.com/Minijinai75/resident-loader/releases/download/v0.2.2/resident-loader-v0.2.2.zip>
 
 ## 目前能做什麼
 

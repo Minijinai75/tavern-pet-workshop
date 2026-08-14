@@ -89,3 +89,9 @@
 - Verification: 7 files / 21 tests passed; production build passed; headed Chrome loaded the real `睿.png`, rendered all 96 cells, expanded crop 128→160, shifted source -18/+12, and confirmed the editor canvas pixels changed.
 - Published: commit `4c6c957`; Pages run `31807400771` passed. Public page returned HTTP 200 with the full-atlas crop controls, recovery button, and whole-PNG-edge warning.
 - Remaining: Mini's hands-on frame crop check; no publishing blocker.
+
+### 2026-08-14 22:15
+
+- Updated the workshop's offline Loader link to v0.2.2 after the settings-entry bug report.
+- Loader handoff: native SillyTavern collapsible drawer; expanding【酒館桌寵】loads settings inline with visible loading/failure feedback.
+- Remaining: publish v0.2.2 Loader asset, then deploy and verify the updated website link.

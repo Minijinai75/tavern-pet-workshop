@@ -1,8 +1,8 @@
 # Resident Loader 參考技術蒸餾契約
 
-> 狀態：v0.2.1 已依 Mini 拍板流程實作、驗證並公開發布；僅待酒館內真人操作 smoke
+> 狀態：v0.2.2 原生折疊入口與展開即載入設定流程已實作並通過本機驗證，待公開發布
 > 路由：hybrid
-> 更新時間：26-08-14 21:44（Asia/Taipei）
+> 更新時間：26-08-14 22:15（Asia/Taipei）
 > 目標：把景和 Resident 現有可驗證行為蒸餾成一個只安裝一次、可匯入多個資料包的 SillyTavern 共用 Loader。
 
 本輪邊界：Loader v1 只處理資料型角色包、桌寵動畫、酒館生成與本機歷史；不接手角色卡的 MVU 狀態交易，也不修改或開關世界書。未來若加入 MVU／世界書能力，必須另立 adapter、交易與回滾契約，不能藉本次匯入格式偷偷取得權限。
@@ -18,6 +18,7 @@
 | 酒館 adapter／生成路由 | `src/adapters/sillytavern.mjs`、`src/core/generation-router.mjs` | `BFBC584F…`、`3670CF24…` | ST context、安靜生成、能力降級 | 不保存 API URL、Token 或 Key |
 | 已驗證 API Profile 實例 | `scripts/embedded/jiangnan-pet-v2.js` | `E4FFCE2D37845CDFD7D823026947C062F88630EB9DFC88F291920B59B289AB61`；`getConnectionProfiles()` 280–293、`/profile-genstream` 370/581、current API 376/586、settings 1146–1193 | 沿用當前 API 或從酒館既有 Connection Profiles 選擇；僅記 profile id | 姜南文案與角色特例全部改成 pack/config；不得複製任何秘密 |
 | 工坊輸出契約 | 本 repo `src/pack-builder.ts` | `jinghe-resident-pack` format v1；`manifest.json`＋`pack-meta.json`＋`assets/spritesheet.png` | Loader v1 的唯一公開匯入格式 | ZIP 中其他可執行檔、SVG、HTML、路徑穿越一律拒收 |
+| 原生折疊入口參考 | [`RivelleDays/SillyTavern-ChatCompletionTabs`](https://github.com/RivelleDays/SillyTavern-ChatCompletionTabs/blob/main/index.js) `renderExtensionSettings()` | 公開原始碼可驗證 `inline-drawer`、header/toggle、content、icon 與 `open` class 互動 | 只採用 SillyTavern 公開 class／DOM 慣例並自行實作 | UI 結構 ADAPTER；不搬用第三方專屬分頁邏輯 |
 
 權利判斷：參考案是 Mini 與景和自有 clean-room 工作，可抽取可驗證行為；角色專屬文字、形象與設定仍歸各 pack，不變成 Loader 的通用預設。公開前另補 LICENSE，未補前不宣稱第三方可再散布程式碼。
 
