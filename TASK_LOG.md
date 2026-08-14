@@ -64,3 +64,6 @@
 - Website split: Added repo URL copy UI and release fallback; moved Loader source/tests/build ownership out of the website repo; retained the old v0.1.0 ZIP and technical contract as historical rollback evidence.
 - Verification: New Loader 30 tests, build, topology test, package, and 10/10 extension validator passed. Website 16 tests and build passed.
 - Next: Commit/push website, wait for both Actions runs, verify public URLs, then run real SillyTavern smoke.
+- Published: website commit `2722166`; Pages run `31799989399` passed. The live page returned HTTP 200 and contains the repo URL, copy button, and v0.1.1 release link.
+- Public Loader verification: repository CI `31799793600` passed; release ZIP returned HTTP 200, 50,600 bytes, and the expected SHA-256.
+- Remaining: real headed SillyTavern install/generation/reload smoke only.

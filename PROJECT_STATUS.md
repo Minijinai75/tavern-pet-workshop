@@ -4,7 +4,7 @@
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
 - Active task: 將 Resident Loader 拆成可貼 repo URL 安裝的獨立專案
-- Current phase: 獨立 Loader v0.1.1 已發布；工坊網站更新待部署驗證
+- Current phase: 獨立 Loader v0.1.1 與工坊安裝入口皆已公開驗證
 - Overall status: in progress
 - Last updated: 2026-08-14 20:20 Asia/Taipei
 
@@ -41,11 +41,11 @@
 
 ## Current Blockers
 
-- No code/build blocker. Updated Pages deployment/public CTA verification and a real SillyTavern repo-install smoke remain.
+- No code/build/publishing blocker. A real SillyTavern repo-install smoke remains.
 
 ## Next Recommended Step
 
-- Verify the updated public workshop, then install `https://github.com/Minijinai75/resident-loader` in a real SillyTavern and run import → bind → profile/current generation → close/reopen panel → reload.
+- Install `https://github.com/Minijinai75/resident-loader` in a real SillyTavern and run import → bind → profile/current generation → close/reopen panel → reload.
 
 ## Resume Here
 

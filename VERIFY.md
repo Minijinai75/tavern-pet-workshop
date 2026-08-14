@@ -41,6 +41,9 @@
 | Independent Loader `npm test` / build / topology test | Verify migrated behavior and direct-install root | PASS | 6 files / 30 tests; root manifest and dist test passed |
 | Independent Loader package twice | Verify deterministic offline fallback | PASS | SHA-256 `bdb512c679f356e3b3b528ff49dc1fe470e399f656918c5abf4e0458c237bfd5` both times |
 | Independent Loader extension validator | Validate direct SillyTavern installation contract | PASS | 10 passed / 0 warnings / 0 failures |
+| Independent Loader GitHub Actions run `31799793600` | Verify the published extension repository | PASS | Tests, build, committed-dist drift check, and package completed |
+| Workshop Pages run `31799989399` | Deploy the repository-install UI | PASS | Build and deploy jobs completed |
+| Public workshop and v0.1.1 release requests | Verify live user entry points and artifact integrity | PASS | Site HTTP 200 with repo URL/copy button/release link; ZIP HTTP 200, 50,600 bytes, SHA-256 matched |
 
 ## Unverified Areas
 
