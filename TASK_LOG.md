@@ -77,3 +77,5 @@
 - Verification: website 7 files / 19 tests passed; production build passed.
 - v0.2.1 handoff: website release buttons now point to the Loader v0.2.1 asset containing operational manual daily-companion generation.
 - Remaining: commit/push, Pages deployment, public URL/release-link verification, and real headed SillyTavern smoke.
+- Published: website commit `8dab9d8`; Pages run `31806001648` passed. The live site returned HTTP 200 and contains the【酒館桌寵】name and v0.2.1 release link.
+- Remaining: real headed SillyTavern smoke only.

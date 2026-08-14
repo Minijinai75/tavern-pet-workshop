@@ -48,6 +48,7 @@
 | `npm run build` after calibrator UI | Type-check and bundle static Pages site | PASS | Vite production build completed |
 | Playwright/Chrome with real `睿.png` | Verify uploaded preview, 96-cell warnings, recomposition, and responsive layout | PASS | mascot `display:none`; 96 unsafe → 0 after auto-fit; zero console errors and zero horizontal overflow at 1440px/390px |
 | `npm test` / `npm run build` before v0.2.1 link release | Verify website behavior and production bundle | PASS | 7 files / 19 tests; Vite production build completed |
+| GitHub Pages run `31806001648` and public page request | Deploy and verify v0.2.1 handoff | PASS | Run completed; public page shows【酒館桌寵】and the v0.2.1 release asset link |
 
 ## Unverified Areas
 

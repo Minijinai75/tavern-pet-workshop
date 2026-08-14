@@ -44,11 +44,11 @@
 
 ## Current Blockers
 
-- v0.2.1 release-link publishing is pending this handoff. A real SillyTavern repo-install smoke remains.
+- No publishing blocker. A real SillyTavern repo-install smoke remains.
 
 ## Next Recommended Step
 
-- Push both repositories, publish Loader v0.2.1, verify Pages and release URLs, then run a real SillyTavern update smoke.
+- Run a real SillyTavern update smoke against the published v0.2.1 release.
 
 ## Resume Here
 
