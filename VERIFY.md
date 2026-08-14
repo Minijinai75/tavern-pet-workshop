@@ -64,6 +64,8 @@
 | Loader v0.3.1 CI/release/public artifact | Verify redesigned letter/story reading-page handoff | PASS | CI `31816357745`; public manifest v0.3.1; ZIP 59,435 bytes and SHA-256 `e1c6a804df98e6ed1d043067595d92ebb7fecff3af3d182a6c3304ec3cce4df3` |
 | Live frame-safety RED/GREEN tests | Prevent stale red borders after a visual adjustment | PASS | Exact 128×128 inspection reports overflow edges, ignores alpha `<=16`, exposes live status, and uses whole-sheet regeneration wording |
 | Chrome live editor check at 390×844 | Verify the border/status changes before Apply | PASS | Real source changed live state from unsafe「右側、下方」to safe immediately after scale input; document had no horizontal overflow |
+| Pages run `31821953618` | Publish automatic alignment and live safety feedback | PASS | Commit `a7ecd98`; CI install, 8 files / 26 tests, production build, and Pages deployment completed |
+| Public page static/browser verification | Verify deployed behavior rather than local-only assets | PASS | Live page contained all new copy and v0.3.1 URL; real file at 390×844 changed unsafe → safe live, then auto-aligned 96 frames to 0 unsafe with `scrollWidth=clientWidth=390` |
 
 ## Unverified Areas
 

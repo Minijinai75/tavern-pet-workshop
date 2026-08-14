@@ -4,9 +4,9 @@
 
 - Project: 桌寵工坊 / Tavern Pet Workshop
 - Active task: 自動辨識每排 8 個角色並重建不切人的 96 格圖集
-- Current phase: 元件優先自動對齊、即時紅綠安全框、GPT 圖片指令強化與 Loader v0.3.1 連結已完成本機驗證
-- Overall status: implementation complete; waiting for commit, Pages deployment, and public verification
-- Last updated: 2026-08-14 23:52 Asia/Taipei
+- Current phase: 元件優先自動對齊、即時紅綠安全框、GPT 圖片指令強化與 Loader v0.3.1 連結已發布並通過公開頁驗證
+- Overall status: published and publicly verified; real SillyTavern update smoke remains
+- Last updated: 2026-08-15 01:03 Asia/Taipei
 
 ## Current Goal
 
@@ -56,7 +56,7 @@
 
 ## Next Recommended Step
 
-- Publish the automatic alignment update, verify the public v0.3.1 link and prompt text, then run Mini's in-Tavern update smoke.
+- Update【酒館桌寵】inside SillyTavern, then run Mini's import → bind → generate → archive/TXT → reload smoke.
 
 ## Resume Here
 

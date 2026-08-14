@@ -132,3 +132,11 @@
 - Fix: the editor now renders the exact 128×128 candidate to an offscreen canvas on every change, inspects that candidate immediately, turns the 8px frame red or green, and reports top/right/bottom/left overflow in text. Applying remains explicit so a slider drag does not rewrite the atlas repeatedly.
 - Copy correction: if source pixels are already missing at the outside edge, the page now says the entire Sprite Sheet must be regenerated with GPT.
 - Browser proof: with the real Jiangnan source at 390×844, the selected frame first reported「右側、下方」; changing scale to 50 immediately changed the live state to green before Apply. The full one-click action still reconstructed 12 rows / 96 frames with 0 unsafe cells and no horizontal overflow.
+
+### 2026-08-15 01:03
+
+- Publication: pushed commit `a7ecd98`; GitHub Pages run `31821953618` completed build, tests, bundle, and deployment successfully.
+- Public static proof: the live page serves the automatic 12-row action, live frame-status element, whole-sheet regeneration wording, separation-first GPT prompt, and Loader v0.3.1 ZIP URL.
+- Public browser proof: at 390×844, the real Jiangnan source first reported live overflow on the right and bottom; scale input changed the result to green before Apply. The automatic action then reconstructed 12 rows / 96 frames with 0 unsafe cells while document and client width both stayed 390px.
+- Cleanup: closed the temporary Chrome QA targets and stopped the local Vite QA server.
+- Remaining: real SillyTavern extension update/generation/history/TXT/reload smoke.
