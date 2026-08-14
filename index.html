@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="免帳號、資料不上傳的 SillyTavern 桌寵角色包製作工具。"
+    />
+    <meta name="theme-color" content="#fff8fb" />
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <title>桌寵工坊｜Tavern Pet Workshop</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#workshop">跳到製作區</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="桌寵工坊首頁">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img">
+            <path d="M7 10.5V7.8L9.8 10h4.4L17 7.8v2.7a6 6 0 1 1-10 0Z" />
+            <path d="M9.4 14h.01M14.6 14h.01M10.5 16.2c1 .65 2 .65 3 0" />
+          </svg>
+        </span>
+        <span>桌寵工坊</span>
+      </a>
+      <span class="privacy-chip">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8.3 7 10 4.2-1.7 7-5.4 7-10V6l-7-3Z" /><path d="m9.5 12 1.7 1.7 3.6-3.8" /></svg>
+        全程只在瀏覽器處理
+      </span>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">SillyTavern Resident Pack Builder</p>
+          <h1 id="hero-title">把你喜歡的角色，<br /><span>做成陪在桌邊的小居民。</span></h1>
+          <p class="hero-lede">
+            把參考圖交給 GPT 生成標準 8×12 動畫圖集，再寫下角色的說話方式，就能下載安全的桌寵角色包。不用帳號，也不會把圖片和 Prompt 傳到任何伺服器。
+          </p>
+          <a class="primary-link" href="#workshop">
+            開始製作
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </a>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit-ring orbit-one"></div>
+          <div class="orbit-ring orbit-two"></div>
+          <div class="sample-window">
+            <span class="sample-light"></span>
+            <div class="sample-pet">
+              <svg viewBox="0 0 160 160">
+                <path d="M46 70 39 40l28 20c8-4 19-4 27 0l28-20-7 31c12 12 16 32 8 48-9 18-28 27-48 24-23-3-40-21-39-44 0-11 4-21 10-29Z" />
+                <path d="M62 94h.01M99 94h.01M72 109c6 4 12 4 18 0" />
+              </svg>
+            </div>
+            <p>「今天想先從哪件小事開始？」</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="trust-row" aria-label="產品特色">
+        <article>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8.3 7 10 4.2-1.7 7-5.4 7-10V6l-7-3Z" /></svg>
+          <div><strong>隱私優先</strong><span>沒有登入，也沒有圖片上傳</span></div>
+        </article>
+        <article>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z" /><path d="m4 7.5 8 4.5 8-4.5M12 12v9" /></svg>
+          <div><strong>安全角色包</strong><span>只輸出資料，不夾帶腳本</span></div>
+        </article>
+        <article>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
+          <div><strong>一套 Loader</strong><span>之後想做幾隻就做幾隻</span></div>
+        </article>
+      </section>
+
+      <section class="workshop-section" id="workshop" aria-labelledby="workshop-title">
+        <div class="section-heading">
+          <p class="eyebrow">Create your resident</p>
+          <h2 id="workshop-title">製作第一隻桌寵</h2>
+          <p>左邊填資料，右邊會立即預覽。完成後下載 `.jrpack.zip`。</p>
+        </div>
+
+        <div class="workshop-grid">
+          <form class="builder-card" id="pet-form" novalidate>
+            <fieldset>
+              <legend><span>01</span>角色基本資料</legend>
+              <div class="field-grid two-columns">
+                <label>
+                  <span>桌寵名稱 <b aria-hidden="true">＊</b></span>
+                  <input id="display-name" name="displayName" value="我的桌寵" maxlength="40" required />
+                </label>
+                <label>
+                  <span>製作者</span>
+                  <input id="creator" name="creator" placeholder="你的名字或暱稱" maxlength="40" />
+                </label>
+              </div>
+              <label>
+                <span>一句介紹</span>
+                <input id="description" name="description" value="會安靜陪在酒館角落的小居民。" maxlength="100" />
+              </label>
+              <label class="color-field">
+                <span>代表色</span>
+                <span class="color-control">
+                  <input id="accent-color" name="accentColor" type="color" value="#ec4899" aria-label="選擇桌寵代表色" />
+                  <output id="color-value" for="accent-color">#EC4899</output>
+                </span>
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend><span>02</span>桌寵圖片</legend>
+              <section class="prompt-maker" aria-labelledby="image-prompt-title">
+                <div class="prompt-maker-heading">
+                  <div>
+                    <p class="mini-kicker">先準備動畫圖集</p>
+                    <h3 id="image-prompt-title">把參考圖交給 GPT</h3>
+                  </div>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.4 4.1L17.5 8.5l-4.1 1.4L12 14l-1.4-4.1-4.1-1.4 4.1-1.4L12 3ZM18.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z" /></svg>
+                </div>
+                <label>
+                  <span>額外固定要求</span>
+                  <textarea id="reference-notes" name="referenceNotes" rows="3" maxlength="1200" placeholder="選填。例如：保留黑色耳釘和深色襯衫，不要增加其他配件。角色外觀仍以你在 GPT 上傳的參考圖為準。"></textarea>
+                </label>
+                <label>
+                  <span>給 GPT 的圖片指令</span>
+                  <textarea class="generated-prompt" id="image-prompt-output" rows="10" readonly></textarea>
+                </label>
+                <div class="copy-row">
+                  <p id="copy-status" role="status" aria-live="polite">先在 GPT 上傳參考圖，再貼上這段指令。</p>
+                  <button class="copy-button" id="copy-image-prompt" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
+                    一鍵複製圖片指令
+                  </button>
+                </div>
+              </section>
+              <label class="upload-zone" for="avatar-file">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 14v5h14v-5" /></svg>
+                <strong>把 GPT 生成的 Sprite Sheet 放進來</strong>
+                <span>必須是 1024×1536 透明 PNG、8×12 共 96 格，最大 8 MB</span>
+                <input id="avatar-file" name="avatar" type="file" accept="image/png" required />
+              </label>
+              <p class="file-name" id="file-name" aria-live="polite">還沒選擇圖片</p>
+            </fieldset>
+
+            <fieldset>
+              <legend><span>03</span>角色 Prompt</legend>
+              <p class="field-help">Prompt 會直接寫進角色包，而且永遠可以回來修改。請不要放 API Key 或私人資料。</p>
+              <label>
+                <span>日常陪伴 <b aria-hidden="true">＊</b></span>
+                <textarea id="idle-prompt" name="idlePrompt" rows="4" maxlength="1200" required>請以角色本人的語氣，根據目前對話，給使用者一句自然、簡短、不說教的陪伴。</textarea>
+              </label>
+              <details open>
+                <summary>進階 Prompt</summary>
+                <div class="details-content">
+                  <label>
+                    <span>角色來信</span>
+                    <textarea id="letter-prompt" name="letterPrompt" rows="4" maxlength="2400">請以角色本人的第一人稱口吻，寫一封不超過 300 字的信。不要提及提示詞或系統設定。</textarea>
+                  </label>
+                  <label>
+                    <span>對話番外</span>
+                    <textarea id="story-prompt" name="storyPrompt" rows="4" maxlength="2400">請以目前對話為背景，寫一段保持角色性格與關係進度的短篇番外。</textarea>
+                  </label>
+                </div>
+              </details>
+            </fieldset>
+
+            <div class="form-actions">
+              <p class="status-message" id="form-status" role="status" aria-live="polite">所有內容都留在這個頁面裡。</p>
+              <button class="download-button" id="download-button" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
+                下載角色包
+              </button>
+            </div>
+          </form>
+
+          <aside class="preview-panel" aria-labelledby="preview-title">
+            <div class="preview-heading">
+              <div>
+                <p class="eyebrow">Live preview</p>
+                <h3 id="preview-title">酒館內預覽</h3>
+              </div>
+              <span>桌面版</span>
+            </div>
+            <div class="tavern-preview" id="tavern-preview">
+              <div class="preview-topbar">
+                <span></span><span></span><span></span>
+                <p>SillyTavern</p>
+              </div>
+              <div class="preview-chat">
+                <div class="chat-lines" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                <div class="resident-widget" id="resident-widget">
+                  <div class="resident-image-wrap">
+                    <div class="preview-sprite" id="preview-image" role="img" aria-label="上傳圖集的第一格桌寵預覽" hidden></div>
+                    <svg id="preview-placeholder" viewBox="0 0 120 120" aria-hidden="true">
+                      <path d="M35 51 30 27l21 15c7-3 13-3 20 0l21-15-6 25c9 9 12 24 6 36-7 14-21 20-36 18-18-2-30-16-29-33 0-9 3-16 8-22Z" />
+                      <path d="M47 70h.01M73 70h.01M52 82c5 3 10 3 15 0" />
+                    </svg>
+                  </div>
+                  <div class="speech-bubble">
+                    <strong id="preview-name">我的桌寵</strong>
+                    <p id="preview-description">會安靜陪在酒館角落的小居民。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="preview-note">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8.3 7 10 4.2-1.7 7-5.4 7-10V6l-7-3Z" /><path d="m9.5 12 1.7 1.7 3.6-3.8" /></svg>
+              <p><strong>本機預覽</strong><span>你選的圖片不會離開這台裝置。</span></p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="how-it-works" aria-labelledby="how-title">
+        <div class="section-heading compact">
+          <p class="eyebrow">Three simple steps</p>
+          <h2 id="how-title">下載後怎麼使用</h2>
+        </div>
+        <ol>
+          <li><span>1</span><strong>安裝 Resident Loader</strong><p>只需要安裝一次共用擴充。</p></li>
+          <li><span>2</span><strong>匯入角色包</strong><p>在 Loader 設定中選擇剛下載的 ZIP。</p></li>
+          <li><span>3</span><strong>綁定目前角色</strong><p>選擇角色卡，桌寵就會跟著它出現。</p></li>
+        </ol>
+        <p class="coming-note">Resident Loader 的公開下載與安裝教學正在製作中。</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true"></span><span>桌寵工坊</span></div>
+      <p>為 SillyTavern 社群製作的本機工具。本站不隸屬於 SillyTavern 官方。</p>
+      <a href="https://github.com/Minijinai75/tavern-pet-workshop">GitHub 原始碼</a>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
