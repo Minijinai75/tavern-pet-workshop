@@ -2,10 +2,15 @@ import { describe, expect, it } from 'vitest';
 import JSZip from 'jszip';
 import {
   buildPackArchive,
+  createPackId,
   createPackManifest,
   slugifyPackId,
   type PackDraft,
 } from '../src/pack-builder';
+
+// 與 resident-loader/src/loader/pack-schema.ts:62 的 id 規則相同（≤64 字元、首字元字母或數字）。
+const LOADER_ID_PATTERN = /^[\p{L}\p{N}][\p{L}\p{N}._-]*$/u;
+const LOADER_ID_MAX_LENGTH = 64;
 
 const draft: PackDraft = {
   displayName: '小景和',
@@ -23,11 +28,46 @@ describe('slugifyPackId', () => {
   });
 });
 
+describe('createPackId', () => {
+  it('namespaces the pack under the creator so two authors naming「小明」do not collide', () => {
+    expect(createPackId('Mini', '小明')).toBe('mini.小明');
+    expect(createPackId('景和', '小明')).toBe('景和.小明');
+    expect(createPackId('Mini', '小明')).not.toBe(createPackId('景和', '小明'));
+  });
+
+  it('slugifies the creator the same way as the pack name', () => {
+    expect(createPackId('  Mini @ Tavern!! ', '小景和')).toBe('mini-tavern.小景和');
+  });
+
+  it('falls back to the bare pack slug when the creator is blank', () => {
+    expect(createPackId('', '小景和')).toBe('小景和');
+    expect(createPackId('   ', '小景和')).toBe('小景和');
+    expect(createPackId('!!!', '小景和')).toBe('小景和');
+  });
+
+  it('stays inside the loader id contract even for very long names', () => {
+    const id = createPackId('c'.repeat(90), 'p'.repeat(90));
+
+    expect(id.length).toBeLessThanOrEqual(LOADER_ID_MAX_LENGTH);
+    expect(id).toMatch(LOADER_ID_PATTERN);
+    expect(id.startsWith('c'.repeat(24) + '.')).toBe(true);
+  });
+
+  it('never leaves a dangling separator after truncation', () => {
+    const id = createPackId('x'.repeat(23) + ' y', 'z'.repeat(40) + ' tail');
+
+    expect(id).toMatch(LOADER_ID_PATTERN);
+    expect(id.endsWith('-')).toBe(false);
+    expect(id.includes('-.')).toBe(false);
+    expect(id.length).toBeLessThanOrEqual(LOADER_ID_MAX_LENGTH);
+  });
+});
+
 describe('createPackManifest', () => {
-  it('creates a data-only v1 manifest with a standard 8x12 sprite atlas', () => {
+  it('creates a data-only v1 manifest with a creator-namespaced id and a standard 8x12 sprite atlas', () => {
     expect(createPackManifest(draft, 'spritesheet.png')).toEqual({
       schemaVersion: 1,
-      id: '小景和',
+      id: 'mini.小景和',
       identity: {
         displayName: '小景和',
         creator: 'Mini',
@@ -75,7 +115,7 @@ describe('buildPackArchive', () => {
     ]);
     expect(JSON.parse(await zip.file('manifest.json')!.async('string'))).toMatchObject({
       schemaVersion: 1,
-      id: '小景和',
+      id: 'mini.小景和',
     });
     expect(await zip.file('assets/spritesheet.png')!.async('uint8array')).toEqual(image);
   });
