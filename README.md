@@ -37,4 +37,4 @@ npm run build
 
 ## 授權
 
-Apache License 2.0（26-09-24 Mini 拍板）——歡迎自由使用、修改與再散布，做你自己的角色包與生態。全文見 [LICENSE](./LICENSE)。
+AGPL-3.0（26-09-24 Mini 拍板,與 SillyTavern 本體同授權）——歡迎自由使用、修改與再散布,做你自己的角色包與生態;改作（含架成網路服務）需以同授權開源。全文見 [LICENSE](./LICENSE)。
